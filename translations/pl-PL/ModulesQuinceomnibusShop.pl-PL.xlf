@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en-US" target-language="pl-PL" datatype="plaintext" original="ModulesQuinceomnibusShop">
+    <body>
+
+      <trans-unit id="quince.omnibus.shop.label_product">
+        <source>Lowest price in the last %s days:</source>
+        <target>Najniższa cena z ostatnich %s dni:</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.shop.label_listing">
+        <source>Lowest from %s days:</source>
+        <target>Najniższa z %s dni:</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.shop.tooltip">
+        <source>This is the lowest price of this product in the last %s days before the current promotion.</source>
+        <target>To najniższa cena tego produktu z ostatnich %s dni przed obecną promocją.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.shop.chart_title">
+        <source>Price history</source>
+        <target>Historia ceny</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.shop.close">
+        <source>Close</source>
+        <target>Zamknij</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.shop.no_data">
+        <source>No price changes recorded in this period.</source>
+        <target>W tym okresie nie zapisano żadnych zmian ceny.</target>
+      </trans-unit>
+
+    </body>
+  </file>
+</xliff>

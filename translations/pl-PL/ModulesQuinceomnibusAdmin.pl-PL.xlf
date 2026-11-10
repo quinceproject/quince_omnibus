@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en-US" target-language="pl-PL" datatype="plaintext" original="ModulesQuinceomnibusAdmin">
+    <body>
+
+      <!-- Moduł -->
+      <trans-unit id="quince.omnibus.name">
+        <source>Quince Omnibus</source>
+        <target>Quince Omnibus</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.desc">
+        <source>Records every price change and shows the lowest price of the last days, as the Omnibus Directive requires. Requires Quince Engine.</source>
+        <target>Zapisuje każdą zmianę ceny i pokazuje najniższą cenę z ostatnich dni, tak jak wymaga dyrektywa Omnibus. Wymaga modułu Quince Engine.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.uninstall">
+        <source>Uninstalling deletes the whole price history. The lowest-price note will start from scratch after reinstalling.</source>
+        <target>Odinstalowanie usuwa całą historię cen. Po ponownej instalacji informacja o najniższej cenie zacznie się od zera.</target>
+      </trans-unit>
+
+      <!-- Historia cen -->
+      <trans-unit id="quince.omnibus.log.title">
+        <source>Price history</source>
+        <target>Historia cen</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.intro">
+        <source>Every recorded price, so the number in the note can be checked. Entries older than %days% days are removed once a day.</source>
+        <target>Każda zapisana cena, żeby dało się sprawdzić liczbę z informacji przy cenie. Wpisy starsze niż %days% dni są usuwane raz dziennie.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.entries">
+        <source>Entries</source>
+        <target>Wpisy</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.products_covered">
+        <source>Products covered</source>
+        <target>Objęte produkty</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.last_7_days">
+        <source>Recorded in the last 7 days</source>
+        <target>Zapisane w ostatnich 7 dniach</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.reaches_back">
+        <source>History reaches back to</source>
+        <target>Historia sięga do</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.tools_title">
+        <source>Filling and clearing the log</source>
+        <target>Wypełnianie i czyszczenie dziennika</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.tools_desc">
+        <source>A shop that has just installed the module has no history yet, so the note stays hidden until prices start changing.</source>
+        <target>Sklep, który dopiero zainstalował moduł, nie ma jeszcze historii, więc informacja przy cenie pozostaje ukryta, dopóki ceny nie zaczną się zmieniać.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.snapshot_title">
+        <source>Record all prices now</source>
+        <target>Zapisz teraz wszystkie ceny</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.snapshot_desc">
+        <source>Writes the current price of every active product. Worth doing once, right after installing.</source>
+        <target>Zapisuje obecną cenę każdego aktywnego produktu. Warto zrobić to raz, zaraz po instalacji.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.snapshot_button">
+        <source>Record</source>
+        <target>Zapisz</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.export_title">
+        <source>Take a copy away</source>
+        <target>Pobierz kopię</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.export_desc">
+        <source>The whole log as a CSV file, narrowed by the filter you have set.</source>
+        <target>Cały dziennik jako plik CSV, zawężony ustawionym filtrem.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.export_button">
+        <source>Export</source>
+        <target>Eksportuj</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.import_title">
+        <source>Bring history in</source>
+        <target>Wczytaj historię</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.import_desc">
+        <source>History a previous shop kept, as a CSV file with the same columns as the export.</source>
+        <target>Historia prowadzona przez poprzedni sklep, jako plik CSV z tymi samymi kolumnami co eksport.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.no_file_chosen">
+        <source>No file chosen</source>
+        <target>Nie wybrano pliku</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.csv_hint">
+        <source>CSV, semicolon or comma separated.</source>
+        <target>CSV, rozdzielany średnikiem albo przecinkiem.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.choose_file">
+        <source>Choose a file</source>
+        <target>Wybierz plik</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.load">
+        <source>Load</source>
+        <target>Wczytaj</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.prune_title">
+        <source>Clear out old entries</source>
+        <target>Usuń stare wpisy</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.prune_desc">
+        <source>Removes everything older than %days% days, without waiting for the daily clean-up.</source>
+        <target>Usuwa wszystko, co jest starsze niż %days% dni, bez czekania na codzienne porządki.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.prune_button">
+        <source>Clear out</source>
+        <target>Usuń</target>
+      </trans-unit>
+
+      <!-- Filtr i tabela -->
+      <trans-unit id="quince.omnibus.log.product">
+        <source>Product</source>
+        <target>Produkt</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.search_placeholder">
+        <source>Name or product number</source>
+        <target>Nazwa albo numer produktu</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.from">
+        <source>From</source>
+        <target>Od</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.to">
+        <source>To</source>
+        <target>Do</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.filter">
+        <source>Filter</source>
+        <target>Filtruj</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.clear">
+        <source>Clear</source>
+        <target>Wyczyść</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.selected">
+        <source>selected</source>
+        <target>zaznaczonych</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.select_all_matching">
+        <source>Select all %total% matching the filter</source>
+        <target>Zaznacz wszystkie pasujące do filtra (%total%)</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.clear_selection">
+        <source>Clear the selection</source>
+        <target>Wyczyść zaznaczenie</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.delete_selected">
+        <source>Delete selected</source>
+        <target>Usuń zaznaczone</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.select_page">
+        <source>Select all rows on this page</source>
+        <target>Zaznacz wszystkie wiersze na tej stronie</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.variant">
+        <source>Variant</source>
+        <target>Wariant</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.gross">
+        <source>Gross</source>
+        <target>Brutto</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.net">
+        <source>Net</source>
+        <target>Netto</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.currency">
+        <source>Currency</source>
+        <target>Waluta</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.recorded">
+        <source>Recorded</source>
+        <target>Zapisano</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.product_deleted">
+        <source>Product %id% (deleted)</source>
+        <target>Produkt %id% (usunięty)</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.no_match">
+        <source>Nothing matches this filter.</source>
+        <target>Nic nie pasuje do tego filtra.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.empty">
+        <source>Nothing recorded yet. Use "Record all prices now" above to start the history today.</source>
+        <target>Nic jeszcze nie zapisano. Użyj „Zapisz teraz wszystkie ceny” powyżej, żeby historia zaczęła się od dziś.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.pagination">
+        <source>Page %page% of %pages%, %total% entries</source>
+        <target>Strona %page% z %pages%, wpisy: %total%</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.log.total">
+        <source>%total% entries</source>
+        <target>Wpisy: %total%</target>
+      </trans-unit>
+
+      <!-- Ustawienia -->
+      <trans-unit id="quince.omnibus.settings.intro">
+        <source>The shop records every price change and works out the lowest price of the period you set. The note appears next to the price once you switch it on in Product page → price block.</source>
+        <target>Sklep zapisuje każdą zmianę ceny i wylicza najniższą cenę z ustawionego okresu. Informacja pojawia się przy cenie, gdy włączysz ją w Strona produktu → blok ceny.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.save">
+        <source>Save changes</source>
+        <target>Zapisz zmiany</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.note_title">
+        <source>The note next to the price</source>
+        <target>Informacja przy cenie</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.note_desc">
+        <source>What the customer reads under the price and which period it covers.</source>
+        <target>Co klient czyta pod ceną i jakiego okresu to dotyczy.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.label_product">
+        <source>Wording on the product page</source>
+        <target>Treść na stronie produktu</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.label_product_default">
+        <source>Lowest price in the last %s days:</source>
+        <target>Najniższa cena z ostatnich %s dni:</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.label_product_hint">
+        <source>Write %s where the number of days belongs. Leaving it out gives a note without the period.</source>
+        <target>Wpisz %s tam, gdzie ma stać liczba dni. Bez tego informacja pokaże się bez okresu.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.label_listing">
+        <source>Wording on listing cards</source>
+        <target>Treść na kartach listingu</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.label_listing_default">
+        <source>Lowest from %s days:</source>
+        <target>Najniższa z %s dni:</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.label_listing_hint">
+        <source>A product card is narrower than the product page, so the same sentence rarely fits both.</source>
+        <target>Karta produktu jest węższa niż strona produktu, więc to samo zdanie rzadko pasuje do obu.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.days">
+        <source>Period in days</source>
+        <target>Okres w dniach</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.days_hint">
+        <source>Thirty days is the shortest period the directive allows. Longer is your choice.</source>
+        <target>Trzydzieści dni to najkrótszy okres, na jaki pozwala dyrektywa. Dłuższy zależy od ciebie.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.price_type">
+        <source>Which price to compare</source>
+        <target>Którą cenę porównywać</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.price_gross">
+        <source>Gross, with tax</source>
+        <target>Brutto, z podatkiem</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.price_net">
+        <source>Net, without tax</source>
+        <target>Netto, bez podatku</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.price_type_hint">
+        <source>Pick the one your shop shows on the product page, so both numbers can be compared.</source>
+        <target>Wybierz tę, którą sklep pokazuje na stronie produktu, żeby obie liczby dało się porównać.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.display">
+        <source>When to show it</source>
+        <target>Kiedy pokazywać</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.display_discount">
+        <source>Only on discounted products</source>
+        <target>Tylko na produktach w promocji</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.display_always">
+        <source>On every product</source>
+        <target>Na każdym produkcie</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.display_hint">
+        <source>The directive asks for the note wherever a discount is announced. On a product with no discount it says nothing new.</source>
+        <target>Dyrektywa wymaga tej informacji wszędzie, gdzie ogłaszana jest obniżka. Na produkcie bez obniżki nie mówi nic nowego.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.extras_title">
+        <source>What else goes with the note</source>
+        <target>Co jeszcze towarzyszy informacji</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.extras_desc">
+        <source>The design of the product page expects a plain line of text. Everything here starts switched off. Turn on only what your shop needs.</source>
+        <target>Projekt strony produktu zakłada zwykły wiersz tekstu. Wszystko tutaj jest na początku wyłączone. Włącz tylko to, czego potrzebuje twój sklep.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.percent">
+        <source>How far the price moved, as a percentage</source>
+        <target>O ile zmieniła się cena, w procentach</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.percent_hint">
+        <source>Counted against the lowest recorded price, not against the crossed-out one. Those are two different numbers and the shop shows both.</source>
+        <target>Liczone względem najniższej zapisanej ceny, a nie względem przekreślonej. To dwie różne liczby i sklep pokazuje obie.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.precision">
+        <source>Decimal places</source>
+        <target>Miejsca po przecinku</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.icon_toggle">
+        <source>An icon with an explanation</source>
+        <target>Ikona z wyjaśnieniem</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.icon_hint">
+        <source>For shops whose customers ask what the number means. The explanation shows on hover.</source>
+        <target>Dla sklepów, których klienci pytają, co oznacza ta liczba. Wyjaśnienie pokazuje się po najechaniu kursorem.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.icon">
+        <source>Icon</source>
+        <target>Ikona</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.icon_position">
+        <source>Where it stands</source>
+        <target>Gdzie stoi</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.icon_start">
+        <source>Before the text</source>
+        <target>Przed tekstem</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.icon_end">
+        <source>After the text</source>
+        <target>Za tekstem</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.tooltip">
+        <source>The explanation</source>
+        <target>Wyjaśnienie</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.tooltip_default">
+        <source>This is the lowest price of this product in the last %s days before the current promotion.</source>
+        <target>To najniższa cena tego produktu z ostatnich %s dni przed obecną promocją.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.tooltip_hint">
+        <source>Write %s where the number of days belongs.</source>
+        <target>Wpisz %s tam, gdzie ma stać liczba dni.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.chart">
+        <source>A chart of the price over time</source>
+        <target>Wykres ceny w czasie</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.chart_hint">
+        <source>Opens in a window over the page. The chart library is served from your own shop, nothing is fetched from outside.</source>
+        <target>Otwiera się w oknie nad stroną. Biblioteka wykresów jest serwowana z twojego sklepu, nic nie jest pobierane z zewnątrz.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.chart_trigger">
+        <source>What opens it</source>
+        <target>Co go otwiera</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.chart_trigger_icon">
+        <source>The icon</source>
+        <target>Ikona</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.chart_trigger_note">
+        <source>The whole note</source>
+        <target>Cała informacja</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.chart_trigger_hint">
+        <source>With the icon switched off the whole note opens it, because there would be nothing else to click.</source>
+        <target>Gdy ikona jest wyłączona, wykres otwiera cała informacja, bo nie byłoby czego innego kliknąć.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.logging_title">
+        <source>When prices get recorded</source>
+        <target>Kiedy ceny są zapisywane</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.logging_desc">
+        <source>A price that was never recorded cannot appear in the note later.</source>
+        <target>Cena, której nigdy nie zapisano, nie może się później pojawić w informacji.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.logging">
+        <source>Recording</source>
+        <target>Zapisywanie</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.logging_immediate">
+        <source>The moment a price changes</source>
+        <target>W chwili zmiany ceny</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.logging_cron">
+        <source>Only from the schedule</source>
+        <target>Tylko według harmonogramu</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.logging_hint">
+        <source>Choose the schedule when you import price lists: an import of a few thousand products would otherwise write to the log a few thousand times.</source>
+        <target>Wybierz harmonogram, jeśli importujesz cenniki: import kilku tysięcy produktów zapisałby inaczej do dziennika kilka tysięcy razy.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.cron_address">
+        <source>Schedule address</source>
+        <target>Adres harmonogramu</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.cron_new">
+        <source>New address</source>
+        <target>Nowy adres</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.cron_hint">
+        <source>Call it once a day. It records the prices and removes entries past the retention period.</source>
+        <target>Wywołuj go raz dziennie. Zapisuje ceny i usuwa wpisy starsze niż okres przechowywania.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.cron_not_needed">
+        <source>Not needed while prices are recorded the moment they change. It stays here in case you switch.</source>
+        <target>Niepotrzebny, dopóki ceny są zapisywane w chwili zmiany. Zostaje tutaj na wypadek, gdybyś to przełączył.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.cron_new_hint">
+        <source>A new address stops the old one working, so update it wherever you pasted it.</source>
+        <target>Nowy adres wyłącza stary, więc zaktualizuj go wszędzie, gdzie go wkleiłeś.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.excluded">
+        <source>Categories left out</source>
+        <target>Pominięte kategorie</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.excluded_hint">
+        <source>Products in these categories are neither recorded nor given a note. Useful for made-to-order goods, where every quote is a different price.</source>
+        <target>Produkty z tych kategorii nie są zapisywane i nie dostają informacji przy cenie. Przydaje się przy towarach na zamówienie, gdzie każda wycena to inna cena.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.retention_title">
+        <source>What the log keeps</source>
+        <target>Co przechowuje dziennik</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.retention_desc">
+        <source>How far back the history reaches.</source>
+        <target>Jak daleko wstecz sięga historia.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.retention">
+        <source>Keep entries for (days)</source>
+        <target>Przechowuj wpisy przez (dni)</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.settings.retention_hint">
+        <source>Older entries are removed once a day. Keep well above the period above. The note is worked out from what is left.</source>
+        <target>Starsze wpisy są usuwane raz dziennie. Ustaw wyraźnie więcej niż okres powyżej. Informacja jest wyliczana z tego, co zostaje.</target>
+      </trans-unit>
+
+      <!-- Komunikaty -->
+      <trans-unit id="quince.omnibus.flash.invalid_token">
+        <source>Invalid security token, please try again.</source>
+        <target>Nieprawidłowy token bezpieczeństwa, spróbuj ponownie.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.flash.deleted_filtered">
+        <source>Deleted %d entries matching the filter.</source>
+        <target>Usunięte wpisy pasujące do filtra: %d.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.flash.deleted">
+        <source>Deleted %d entries.</source>
+        <target>Usunięte wpisy: %d.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.flash.nothing_selected">
+        <source>Nothing was selected.</source>
+        <target>Nic nie zostało zaznaczone.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.flash.pruned">
+        <source>Removed %d entries older than the retention period.</source>
+        <target>Usunięte wpisy starsze niż okres przechowywania: %d.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.flash.snapshot">
+        <source>Recorded %rows% entries for %products% products, skipped %skipped%.</source>
+        <target>Zapisane wpisy: %rows%, produkty: %products%, pominięte: %skipped%.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.flash.no_file">
+        <source>No file was sent.</source>
+        <target>Nie przesłano pliku.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.flash.imported">
+        <source>Loaded %loaded% entries, skipped %skipped%.</source>
+        <target>Wczytane wpisy: %loaded%, pominięte: %skipped%.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.flash.saved">
+        <source>Settings saved.</source>
+        <target>Ustawienia zapisane.</target>
+      </trans-unit>
+      <trans-unit id="quince.omnibus.flash.cron_regenerated">
+        <source>New address generated. The previous one stopped working.</source>
+        <target>Wygenerowano nowy adres. Poprzedni przestał działać.</target>
+      </trans-unit>
+
+    </body>
+  </file>
+</xliff>

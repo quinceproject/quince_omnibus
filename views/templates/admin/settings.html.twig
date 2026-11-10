@@ -108,14 +108,14 @@
         <div class="qc-card-head">
             <div>
                 <div class="qc-card-title">{{ 'What else goes with the note'|trans }}</div>
-                <div class="qc-card-desc">{{ 'The design of the product page expects a plain line of text. Everything here starts switched off - turn on only what your shop needs.'|trans }}</div>
+                <div class="qc-card-desc">{{ 'The design of the product page expects a plain line of text. Everything here starts switched off. Turn on only what your shop needs.'|trans }}</div>
             </div>
         </div>
 
         <div class="qc-card-body qc-stack">
 
             {{ fields.toggle('SHOW_PERCENT', settings.SHOW_PERCENT == '1', 'How far the price moved, as a percentage'|trans, '', 'procent') }}
-            <div class="qc-hint">{{ 'Counted against the lowest recorded price, not against the crossed-out one - those are two different numbers and the shop shows both.'|trans }}</div>
+            <div class="qc-hint">{{ 'Counted against the lowest recorded price, not against the crossed-out one. Those are two different numbers and the shop shows both.'|trans }}</div>
 
             <div class="qc-field" style="max-inline-size:220px" x-show="procent" x-cloak>
                 <label class="qc-label" for="q-precision">{{ 'Decimal places'|trans }}</label>
@@ -156,7 +156,7 @@
             </div>
 
             {{ fields.toggle('SHOW_CHART', settings.SHOW_CHART == '1', 'A chart of the price over time'|trans, '', 'wykres') }}
-            <div class="qc-hint">{{ 'Opens in a window over the page. The chart library is served from your own shop - nothing is fetched from outside.'|trans }}</div>
+            <div class="qc-hint">{{ 'Opens in a window over the page. The chart library is served from your own shop, nothing is fetched from outside.'|trans }}</div>
 
             <div class="qc-field" style="max-inline-size:280px" x-show="wykres" x-cloak>
                 <label class="qc-label" for="q-chart-trigger">{{ 'What opens it'|trans }}</label>
