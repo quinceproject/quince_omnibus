@@ -74,7 +74,7 @@
             </div>
             <div>
                 <div class="qc-card-desc">{{ 'History reaches back to'|trans }}</div>
-                <div class="qc-card-title">{{ stats.najstarszy ? stats.najstarszy|date('Y-m-d') : '—' }}</div>
+                <div class="qc-card-title">{{ stats.najstarszy ? stats.najstarszy|date('Y-m-d') : '-' }}</div>
             </div>
         </div>
     </div>
@@ -241,7 +241,7 @@
                                 {{ row.product_name ?: ('Product %id% (deleted)'|trans({'%id%': row.id_product})) }}
                                 <span class="qc-card-desc">#{{ row.id_product }}</span>
                             </td>
-                            <td>{{ row.id_product_attribute > 0 ? '#' ~ row.id_product_attribute : '—' }}</td>
+                            <td>{{ row.id_product_attribute > 0 ? '#' ~ row.id_product_attribute : '-' }}</td>
                             <td class="qc-num">{{ row.price_tax_incl|number_format(2, ',', ' ') }}</td>
                             <td class="qc-num">{{ row.price_tax_excl|number_format(2, ',', ' ') }}</td>
                             <td>{{ row.currency ?: row.id_currency }}</td>
