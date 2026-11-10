@@ -1,0 +1,81 @@
+# Ekrany modułu w panelu silnika.
+#
+# _legacy_controller wskazuje zakładkę silnika, bo moduł bez niego i tak nie działa
+# (zadeklarowana zależność). Dzięki temu nie zakładamy własnej zakładki tylko po to,
+# żeby PrestaShop miał gdzie sprawdzić uprawnienia.
+#
+# Dwa widoki to dwie trasy, a nie jeden ekran z przełącznikiem: dziennik ma
+# stronicowanie i filtry, które muszą mieścić się w adresie — inaczej nie da się
+# wrócić do tej samej strony wyników ani wysłać jej komuś.
+
+quince_omnibus_settings:
+  path: quince/omnibus
+  methods: [GET]
+  defaults:
+    _controller: Quince\Omnibus\Controller\Admin\SettingsController::indexAction
+    _legacy_controller: 'AdminQuince'
+    _legacy_link: 'AdminQuince'
+
+quince_omnibus_settings_save:
+  path: quince/omnibus/save
+  methods: [POST]
+  defaults:
+    _controller: Quince\Omnibus\Controller\Admin\SettingsController::saveAction
+    _legacy_controller: 'AdminQuince'
+    _legacy_link: 'AdminQuince:save'
+
+quince_omnibus_token:
+  path: quince/omnibus/token
+  methods: [POST]
+  defaults:
+    _controller: Quince\Omnibus\Controller\Admin\SettingsController::tokenAction
+    _legacy_controller: 'AdminQuince'
+    _legacy_link: 'AdminQuince:save'
+
+quince_omnibus_log:
+  path: quince/omnibus/log
+  methods: [GET]
+  defaults:
+    _controller: Quince\Omnibus\Controller\Admin\LogController::indexAction
+    _legacy_controller: 'AdminQuince'
+    _legacy_link: 'AdminQuince'
+
+quince_omnibus_log_delete:
+  path: quince/omnibus/log/delete
+  methods: [POST]
+  defaults:
+    _controller: Quince\Omnibus\Controller\Admin\LogController::deleteAction
+    _legacy_controller: 'AdminQuince'
+    _legacy_link: 'AdminQuince:delete'
+
+quince_omnibus_log_clean:
+  path: quince/omnibus/log/clean
+  methods: [POST]
+  defaults:
+    _controller: Quince\Omnibus\Controller\Admin\LogController::cleanAction
+    _legacy_controller: 'AdminQuince'
+    _legacy_link: 'AdminQuince:delete'
+
+quince_omnibus_log_record_all:
+  path: quince/omnibus/log/record-all
+  methods: [POST]
+  defaults:
+    _controller: Quince\Omnibus\Controller\Admin\LogController::recordAllAction
+    _legacy_controller: 'AdminQuince'
+    _legacy_link: 'AdminQuince:save'
+
+quince_omnibus_log_export:
+  path: quince/omnibus/log/export
+  methods: [GET]
+  defaults:
+    _controller: Quince\Omnibus\Controller\Admin\LogController::exportAction
+    _legacy_controller: 'AdminQuince'
+    _legacy_link: 'AdminQuince'
+
+quince_omnibus_log_import:
+  path: quince/omnibus/log/import
+  methods: [POST]
+  defaults:
+    _controller: Quince\Omnibus\Controller\Admin\LogController::importAction
+    _legacy_controller: 'AdminQuince'
+    _legacy_link: 'AdminQuince:save'

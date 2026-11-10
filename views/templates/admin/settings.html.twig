@@ -1,0 +1,253 @@
+{# Ekran modułu w stylistyce silnika: ten sam layout, te same makra pól.
+   Moduł nie ma własnego CSS-u ani własnego sidebara — bierze je stąd. #}
+{% extends '@Modules/quince_engine/views/templates/admin/layout.html.twig' %}
+{% import '@Modules/quince_engine/views/templates/admin/_macros/icons.html.twig' as icons %}
+{% import '@Modules/quince_engine/views/templates/admin/_macros/fields.html.twig' as fields %}
+{% import '@Modules/quince_engine/views/templates/admin/_macros/tree.html.twig' as tree %}
+
+{% trans_default_domain 'Modules.Quinceomnibus.Admin' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ tree.assets(qcVer) }}
+    <script src="{{ asset('../modules/quince_engine/views/js/vendor/alpine.min.js') ~ qcVer }}" defer></script>
+{% endblock %}
+
+{% block quince_intro %}
+    <div class="qc-alert qc-alert-info">
+        {{ icons.icon('info', 18, 'qc-alert-icon') }}
+        <div>
+            {{ 'The shop records every price change and works out the lowest price of the period you set. The note appears next to the price once you switch it on in Product page → price block.'|trans }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block quince_actions %}
+    <button type="submit" form="quince-omnibus" class="qc-btn qc-btn-primary">
+        {{ icons.icon('check', 14) }} {{ 'Save changes'|trans }}
+    </button>
+{% endblock %}
+
+{% block quince_body %}
+{{ tree.dane('QUINCE_KATEGORIE', categories, null)|raw }}
+
+<form id="quince-omnibus" method="post" action="{{ path('quince_omnibus_settings_save') }}" class="qc-stack"
+      x-data="{
+          tryb: '{{ settings.LOGGING_MODE }}',
+          procent: {{ settings.SHOW_PERCENT == '1' ? 'true' : 'false' }},
+          ikona: {{ settings.SHOW_ICON == '1' ? 'true' : 'false' }},
+          wykres: {{ settings.SHOW_CHART == '1' ? 'true' : 'false' }}
+      }">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('quince_omnibus_settings_save') }}">
+
+    {# ── 1. Nota przy cenie ── #}
+    <div class="qc-card">
+        <div class="qc-card-head">
+            <div>
+                <div class="qc-card-title">{{ 'The note next to the price'|trans }}</div>
+                <div class="qc-card-desc">{{ 'What the customer reads under the price and which period it covers.'|trans }}</div>
+            </div>
+        </div>
+
+        <div class="qc-card-body qc-stack">
+            {{ fields.multilang(
+                'LABEL_PRODUCT',
+                'Wording on the product page'|trans,
+                languages,
+                translations.LABEL_PRODUCT,
+                'Lowest price in the last %s days:'|trans,
+                'Write %s where the number of days belongs. Leaving it out gives a note without the period.'|trans
+            ) }}
+
+            {{ fields.multilang(
+                'LABEL_LISTING',
+                'Wording on listing cards'|trans,
+                languages,
+                translations.LABEL_LISTING,
+                'Lowest from %s days:'|trans,
+                'A product card is narrower than the product page, so the same sentence rarely fits both.'|trans
+            ) }}
+
+            <div style="display:flex; gap:8px; flex-wrap:wrap">
+                <div class="qc-field" style="max-inline-size:220px">
+                    <label class="qc-label" for="q-days">{{ 'Period in days'|trans }}</label>
+                    <input type="number" class="qc-field-base qc-focusable" id="q-days" name="DAYS"
+                           value="{{ settings.DAYS }}" min="{{ limits.daysMin }}" max="{{ limits.daysMax }}" step="1">
+                    <div class="qc-hint">{{ 'Thirty days is the shortest period the directive allows. Longer is your choice.'|trans }}</div>
+                </div>
+
+                <div class="qc-field" style="max-inline-size:260px">
+                    <label class="qc-label" for="q-price-type">{{ 'Which price to compare'|trans }}</label>
+                    <div class="qc-select-wrap">
+                        <select id="q-price-type" name="PRICE_TYPE" class="qc-field-base qc-select qc-focusable">
+                            <option value="gross"{{ settings.PRICE_TYPE == 'gross' ? ' selected' : '' }}>{{ 'Gross, with tax'|trans }}</option>
+                            <option value="net"{{ settings.PRICE_TYPE == 'net' ? ' selected' : '' }}>{{ 'Net, without tax'|trans }}</option>
+                        </select>
+                        {{ icons.icon('chevronDown', 14, 'qc-select-chevron') }}
+                    </div>
+                    <div class="qc-hint">{{ 'Pick the one your shop shows on the product page, so both numbers can be compared.'|trans }}</div>
+                </div>
+            </div>
+
+            <div class="qc-field" style="max-inline-size:360px">
+                <label class="qc-label" for="q-display">{{ 'When to show it'|trans }}</label>
+                <div class="qc-select-wrap">
+                    <select id="q-display" name="DISPLAY_MODE" class="qc-field-base qc-select qc-focusable">
+                        <option value="on-discount"{{ settings.DISPLAY_MODE == 'on-discount' ? ' selected' : '' }}>{{ 'Only on discounted products'|trans }}</option>
+                        <option value="always"{{ settings.DISPLAY_MODE == 'always' ? ' selected' : '' }}>{{ 'On every product'|trans }}</option>
+                    </select>
+                    {{ icons.icon('chevronDown', 14, 'qc-select-chevron') }}
+                </div>
+                <div class="qc-hint">{{ 'The directive asks for the note wherever a discount is announced. On a product with no discount it says nothing new.'|trans }}</div>
+            </div>
+        </div>
+    </div>
+
+    {# --- 2. Co jeszcze przy nocie --- #}
+    <div class="qc-card">
+        <div class="qc-card-head">
+            <div>
+                <div class="qc-card-title">{{ 'What else goes with the note'|trans }}</div>
+                <div class="qc-card-desc">{{ 'The design of the product page expects a plain line of text. Everything here starts switched off - turn on only what your shop needs.'|trans }}</div>
+            </div>
+        </div>
+
+        <div class="qc-card-body qc-stack">
+
+            {{ fields.toggle('SHOW_PERCENT', settings.SHOW_PERCENT == '1', 'How far the price moved, as a percentage'|trans, '', 'procent') }}
+            <div class="qc-hint">{{ 'Counted against the lowest recorded price, not against the crossed-out one - those are two different numbers and the shop shows both.'|trans }}</div>
+
+            <div class="qc-field" style="max-inline-size:220px" x-show="procent" x-cloak>
+                <label class="qc-label" for="q-precision">{{ 'Decimal places'|trans }}</label>
+                <input type="number" class="qc-field-base qc-focusable" id="q-precision" name="PRECISION"
+                       value="{{ settings.PRECISION }}" min="0" max="4" step="1">
+            </div>
+
+            {{ fields.toggle('SHOW_ICON', settings.SHOW_ICON == '1', 'An icon with an explanation'|trans, '', 'ikona') }}
+            <div class="qc-hint">{{ 'For shops whose customers ask what the number means. The explanation shows on hover.'|trans }}</div>
+
+            <div class="qc-stack" x-show="ikona" x-cloak>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end">
+                    <div class="qc-field" style="margin:0">
+                        <label class="qc-label">{{ 'Icon'|trans }}</label>
+                        {{ fields.iconpicker('ICON', settings.ICON, iconSvg, path(iconsRoute)) }}
+                    </div>
+
+                    <div class="qc-field" style="max-inline-size:220px; margin:0">
+                        <label class="qc-label" for="q-icon-pos">{{ 'Where it stands'|trans }}</label>
+                        <div class="qc-select-wrap">
+                            <select id="q-icon-pos" name="ICON_POSITION" class="qc-field-base qc-select qc-focusable">
+                                <option value="start"{{ settings.ICON_POSITION == 'start' ? ' selected' : '' }}>{{ 'Before the text'|trans }}</option>
+                                <option value="end"{{ settings.ICON_POSITION == 'end' ? ' selected' : '' }}>{{ 'After the text'|trans }}</option>
+                            </select>
+                            {{ icons.icon('chevronDown', 14, 'qc-select-chevron') }}
+                        </div>
+                    </div>
+                </div>
+
+                {{ fields.multilang(
+                    'TOOLTIP',
+                    'The explanation'|trans,
+                    languages,
+                    translations.TOOLTIP,
+                    'This is the lowest price of this product in the last %s days before the current promotion.'|trans,
+                    'Write %s where the number of days belongs.'|trans
+                ) }}
+            </div>
+
+            {{ fields.toggle('SHOW_CHART', settings.SHOW_CHART == '1', 'A chart of the price over time'|trans, '', 'wykres') }}
+            <div class="qc-hint">{{ 'Opens in a window over the page. The chart library is served from your own shop - nothing is fetched from outside.'|trans }}</div>
+
+            <div class="qc-field" style="max-inline-size:280px" x-show="wykres" x-cloak>
+                <label class="qc-label" for="q-chart-trigger">{{ 'What opens it'|trans }}</label>
+                <div class="qc-select-wrap">
+                    <select id="q-chart-trigger" name="CHART_TRIGGER" class="qc-field-base qc-select qc-focusable">
+                        <option value="icon"{{ settings.CHART_TRIGGER == 'icon' ? ' selected' : '' }}>{{ 'The icon'|trans }}</option>
+                        <option value="note"{{ settings.CHART_TRIGGER == 'note' ? ' selected' : '' }}>{{ 'The whole note'|trans }}</option>
+                    </select>
+                    {{ icons.icon('chevronDown', 14, 'qc-select-chevron') }}
+                </div>
+                <div class="qc-hint" x-show="!ikona" x-cloak>{{ 'With the icon switched off the whole note opens it, because there would be nothing else to click.'|trans }}</div>
+            </div>
+
+        </div>
+    </div>
+
+    {# ── 2. Kiedy zapisujemy ── #}
+    <div class="qc-card">
+        <div class="qc-card-head">
+            <div>
+                <div class="qc-card-title">{{ 'When prices get recorded'|trans }}</div>
+                <div class="qc-card-desc">{{ 'A price that was never recorded cannot appear in the note later.'|trans }}</div>
+            </div>
+        </div>
+
+        <div class="qc-card-body qc-stack">
+            <div class="qc-field" style="max-inline-size:360px">
+                <label class="qc-label" for="q-logging">{{ 'Recording'|trans }}</label>
+                <div class="qc-select-wrap">
+                    <select id="q-logging" name="LOGGING_MODE" class="qc-field-base qc-select qc-focusable" x-model="tryb">
+                        <option value="immediate">{{ 'The moment a price changes'|trans }}</option>
+                        <option value="cron">{{ 'Only from the schedule'|trans }}</option>
+                    </select>
+                    {{ icons.icon('chevronDown', 14, 'qc-select-chevron') }}
+                </div>
+                <div class="qc-hint">{{ 'Choose the schedule when you import price lists: an import of a few thousand products would otherwise write to the log a few thousand times.'|trans }}</div>
+            </div>
+
+            <div class="qc-field">
+                <label class="qc-label" for="q-cron">{{ 'Schedule address'|trans }}</label>
+                <div style="display:flex; gap:8px; flex-wrap:wrap">
+                    <input type="text" class="qc-field-base qc-focusable" id="q-cron" value="{{ cronUrl }}" readonly
+                           onclick="this.select()" style="flex:1; min-width:0">
+                    {# Osobny formularz, nie formaction: wymiana adresu nie może przy
+                       okazji wysyłać reszty ekranu, bo zapisałaby zmiany, których
+                       sklep jeszcze nie zatwierdził. #}
+                    <button type="submit" form="quince-omnibus-token" class="qc-btn qc-btn-outline">
+                        {{ icons.icon('refresh', 14) }} {{ 'New address'|trans }}
+                    </button>
+                </div>
+                <div class="qc-hint">
+                    <span x-show="tryb === 'cron'">{{ 'Call it once a day. It records the prices and removes entries past the retention period.'|trans }}</span>
+                    <span x-show="tryb !== 'cron'">{{ 'Not needed while prices are recorded the moment they change. It stays here in case you switch.'|trans }}</span>
+                    {{ 'A new address stops the old one working, so update it wherever you pasted it.'|trans }}
+                </div>
+            </div>
+
+            {# Wykluczenia stoją TUTAJ, a nie przy okresie przechowywania: produkt
+               z tych kategorii nigdy nie trafia do dziennika, więc to decyzja o tym,
+               CO zapisujemy, a nie jak długo to trzymamy. Przy liczbie dni czytało
+               się jak drugi warunek kasowania starych wpisów. #}
+            <div class="qc-field">
+                {{ tree.szukajka('QUINCE_KATEGORIE', excluded, 'EXCLUDED_CATEGORIES', 'Categories left out'|trans, true) }}
+                <div class="qc-hint">{{ 'Products in these categories are neither recorded nor given a note. Useful for made-to-order goods, where every quote is a different price.'|trans }}</div>
+            </div>
+        </div>
+    </div>
+
+    {# ── 3. Co trzymamy ── #}
+    <div class="qc-card">
+        <div class="qc-card-head">
+            <div>
+                <div class="qc-card-title">{{ 'What the log keeps'|trans }}</div>
+                <div class="qc-card-desc">{{ 'How far back the history reaches.'|trans }}</div>
+            </div>
+        </div>
+
+        <div class="qc-card-body qc-stack">
+            <div class="qc-field" style="max-inline-size:260px">
+                <label class="qc-label" for="q-retention">{{ 'Keep entries for (days)'|trans }}</label>
+                <input type="number" class="qc-field-base qc-focusable" id="q-retention" name="LOG_RETENTION"
+                       value="{{ settings.LOG_RETENTION }}" min="{{ limits.retentionMin }}" max="{{ limits.retentionMax }}" step="1">
+                <div class="qc-hint">{{ 'Older entries are removed once a day. Keep well above the period above. The note is worked out from what is left.'|trans }}</div>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+<form id="quince-omnibus-token" method="post" action="{{ path('quince_omnibus_token') }}">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('quince_omnibus_token') }}">
+</form>
+{% endblock %}

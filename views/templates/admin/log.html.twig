@@ -1,0 +1,299 @@
+{# Dziennik cen — co i kiedy zostało zapisane.
+   Ten sam layout i te same komponenty co reszta panelu Quince. #}
+{% extends '@Modules/quince_engine/views/templates/admin/layout.html.twig' %}
+{% import '@Modules/quince_engine/views/templates/admin/_macros/icons.html.twig' as icons %}
+
+{% trans_default_domain 'Modules.Quinceomnibus.Admin' %}
+
+{% macro naglowek(klucz, tekst, sort, dir, filters) %}
+    {# Makro nie dziedziczy importów szablonu, więc ikony bierze u siebie. #}
+    {% import '@Modules/quince_engine/views/templates/admin/_macros/icons.html.twig' as icons %}
+
+    {# Kliknięcie w tę samą kolumnę odwraca porządek, w inną — zaczyna od malejącego:
+       przy dacie i cenie ludzie szukają najpierw tego, co największe i najnowsze. #}
+    {% set nowyKierunek = (sort == klucz and dir == 'DESC') ? 'ASC' : 'DESC' %}
+    <th class="qc-sortable">
+        <a href="{{ path('quince_omnibus_log', filters|merge({'sortuj': klucz, 'kierunek': nowyKierunek})) }}">
+            {{ tekst }}
+            {% if sort == klucz %}
+                <span class="qc-sort"{{ dir == 'ASC' ? ' style="transform:rotate(180deg)"'|raw }}>{{ icons.icon('chevronDown', 12) }}</span>
+            {% endif %}
+        </a>
+    </th>
+{% endmacro %}
+
+{% import _self as kolumna %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('../modules/quince_engine/views/js/vendor/alpine.min.js') ~ qcVer }}" defer></script>
+{% endblock %}
+
+{% block quince_intro %}
+    <div class="qc-alert qc-alert-info">
+        {{ icons.icon('info', 18, 'qc-alert-icon') }}
+        <div>
+            {{ 'Every recorded price, so the number in the note can be checked. Entries older than %days% days are removed once a day.'|trans({'%days%': retention}) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block quince_body %}
+<div class="qc-stack" x-data="{
+        zaznaczone: [],
+        {# Zaznaczenie obejmujące także strony, których nikt nie otwierał.
+           Zbiór opisuje wtedy filtr, a nie lista numerów. #}
+        calyFiltr: false,
+        naStronie: {{ rows|length }},
+        wszystkich: {{ total }},
+        przelaczStrone(zaznacz) {
+            this.calyFiltr = false;
+            document.querySelectorAll('.js-omnibus-wiersz').forEach((pole) => { pole.checked = zaznacz; });
+            this.zaznaczone = zaznacz
+                ? [...document.querySelectorAll('.js-omnibus-wiersz')].map((pole) => pole.value)
+                : [];
+        },
+        get calaStrona() { return this.naStronie > 0 && this.zaznaczone.length === this.naStronie; },
+        get ile() { return this.calyFiltr ? this.wszystkich : this.zaznaczone.length; }
+    }">
+
+    {# ── Liczby na wierzchu ── #}
+    <div class="qc-card">
+        <div class="qc-card-body" style="display:flex; gap:32px; flex-wrap:wrap">
+            <div>
+                <div class="qc-card-desc">{{ 'Entries'|trans }}</div>
+                <div class="qc-card-title">{{ stats.wpisow }}</div>
+            </div>
+            <div>
+                <div class="qc-card-desc">{{ 'Products covered'|trans }}</div>
+                <div class="qc-card-title">{{ stats.produktow }}</div>
+            </div>
+            <div>
+                <div class="qc-card-desc">{{ 'Recorded in the last 7 days'|trans }}</div>
+                <div class="qc-card-title">{{ stats.ostatnie7 }}</div>
+            </div>
+            <div>
+                <div class="qc-card-desc">{{ 'History reaches back to'|trans }}</div>
+                <div class="qc-card-title">{{ stats.najstarszy ? stats.najstarszy|date('Y-m-d') : '—' }}</div>
+            </div>
+        </div>
+    </div>
+
+    {# ── Narzędzia ── #}
+    <div class="qc-card">
+        <div class="qc-card-head">
+            <div>
+                <div class="qc-card-title">{{ 'Filling and clearing the log'|trans }}</div>
+                <div class="qc-card-desc">{{ 'A shop that has just installed the module has no history yet, so the note stays hidden until prices start changing.'|trans }}</div>
+            </div>
+        </div>
+
+        <div class="qc-card-body" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:12px">
+
+            <div class="qc-tool-card">
+                <div class="qc-tool-card-icon">{{ icons.icon('refresh', 18) }}</div>
+                <div class="qc-tool-card-title">{{ 'Record all prices now'|trans }}</div>
+                <div class="qc-tool-card-desc">{{ 'Writes the current price of every active product. Worth doing once, right after installing.'|trans }}</div>
+                <form method="post" action="{{ path('quince_omnibus_log_record_all') }}">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('quince_omnibus_log_record_all') }}">
+                    <button type="submit" class="qc-btn qc-btn-outline qc-btn-sm">{{ 'Record'|trans }}</button>
+                </form>
+            </div>
+
+            <div class="qc-tool-card">
+                <div class="qc-tool-card-icon">{{ icons.icon('upload', 18) }}</div>
+                <div class="qc-tool-card-title">{{ 'Take a copy away'|trans }}</div>
+                <div class="qc-tool-card-desc">{{ 'The whole log as a CSV file, narrowed by the filter you have set.'|trans }}</div>
+                <a class="qc-btn qc-btn-outline qc-btn-sm" href="{{ path('quince_omnibus_log_export', filters) }}">{{ 'Export'|trans }}</a>
+            </div>
+
+            <div class="qc-tool-card">
+                <div class="qc-tool-card-icon">{{ icons.icon('upload', 18) }}</div>
+                <div class="qc-tool-card-title">{{ 'Bring history in'|trans }}</div>
+                <div class="qc-tool-card-desc">{{ 'History a previous shop kept, as a CSV file with the same columns as the export.'|trans }}</div>
+
+                <form method="post" action="{{ path('quince_omnibus_log_import') }}" enctype="multipart/form-data"
+                      x-data="{ nazwaPliku: '' }">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('quince_omnibus_log_import') }}">
+                    <div class="qc-upload">
+                        <span class="qc-upload-thumb">{{ icons.icon('upload', 18) }}</span>
+
+                        <div class="qc-upload-info">
+                            <div class="qc-upload-name" x-text="nazwaPliku || '{{ 'No file chosen'|trans }}'"></div>
+                            <div>{{ 'CSV, semicolon or comma separated.'|trans }}</div>
+                        </div>
+
+                        <div class="qc-upload-actions">
+                            <button type="button" class="qc-btn qc-btn-outline" @click="$refs.plik.click()">
+                                {{ icons.icon('upload', 14) }} {{ 'Choose a file'|trans }}
+                            </button>
+                            <button type="submit" class="qc-btn qc-btn-outline" x-show="nazwaPliku" x-cloak>
+                                {{ icons.icon('check', 14) }} {{ 'Load'|trans }}
+                            </button>
+                        </div>
+
+                        <input type="file" x-ref="plik" hidden name="csv" accept=".csv,text/csv"
+                               @change="nazwaPliku = $event.target.files.length ? $event.target.files[0].name : ''">
+                    </div>
+                </form>
+            </div>
+
+            <div class="qc-tool-card qc-danger">
+                <div class="qc-tool-card-icon">{{ icons.icon('trash', 18) }}</div>
+                <div class="qc-tool-card-title">{{ 'Clear out old entries'|trans }}</div>
+                <div class="qc-tool-card-desc">{{ 'Removes everything older than %days% days, without waiting for the daily clean-up.'|trans({'%days%': retention}) }}</div>
+                <form method="post" action="{{ path('quince_omnibus_log_clean') }}">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('quince_omnibus_log_clean') }}">
+                    <button type="submit" class="qc-btn qc-btn-outline qc-btn-sm">{{ 'Clear out'|trans }}</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    {# ── Filtr ── #}
+    <div class="qc-card">
+        <div class="qc-card-body">
+            <form method="get" action="{{ path('quince_omnibus_log') }}"
+                  style="display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end">
+                <div class="qc-field" style="max-inline-size:280px; margin:0">
+                    <label class="qc-label" for="q-szukaj">{{ 'Product'|trans }}</label>
+                    <input type="search" class="qc-field-base qc-focusable" id="q-szukaj" name="szukaj"
+                           value="{{ filters.szukaj }}" placeholder="{{ 'Name or product number'|trans }}">
+                </div>
+                <div class="qc-field" style="max-inline-size:180px; margin:0">
+                    <label class="qc-label" for="q-od">{{ 'From'|trans }}</label>
+                    <input type="date" class="qc-field-base qc-focusable" id="q-od" name="od" value="{{ filters.od }}">
+                </div>
+                <div class="qc-field" style="max-inline-size:180px; margin:0">
+                    <label class="qc-label" for="q-do">{{ 'To'|trans }}</label>
+                    <input type="date" class="qc-field-base qc-focusable" id="q-do" name="do" value="{{ filters.do }}">
+                </div>
+                <button type="submit" class="qc-btn qc-btn-outline">{{ icons.icon('search', 14) }} {{ 'Filter'|trans }}</button>
+                {% if filters.szukaj or filters.od or filters.do %}
+                    <a class="qc-btn qc-btn-text" href="{{ path('quince_omnibus_log') }}">{{ 'Clear'|trans }}</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    {# ── Wiersze ── #}
+    <form method="post" action="{{ path('quince_omnibus_log_delete') }}">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('quince_omnibus_log_delete') }}">
+        <div class="qc-table-wrap">
+
+            <div class="qc-bulk-bar" x-show="zaznaczone.length > 0" x-cloak>
+                <span><span x-text="ile"></span> {{ 'selected'|trans }}</span>
+
+                {# Propozycja rozszerzenia zaznaczenia pojawia się dopiero wtedy, gdy
+                   cała strona jest zaznaczona, a poza nią coś jeszcze zostało —
+                   wcześniej nie ma czego rozszerzać. #}
+                <template x-if="calaStrona && wszystkich > naStronie && !calyFiltr">
+                    <button type="button" class="qc-btn qc-btn-text qc-btn-sm" @click="calyFiltr = true">
+                        {{ 'Select all %total% matching the filter'|trans({'%total%': total}) }}
+                    </button>
+                </template>
+
+                <template x-if="calyFiltr">
+                    <button type="button" class="qc-btn qc-btn-text qc-btn-sm" @click="przelaczStrone(false)">
+                        {{ 'Clear the selection'|trans }}
+                    </button>
+                </template>
+
+                {# Filtr jedzie razem z wysyłką: bez niego kasowanie „wszystkich
+                   pasujących" trafiłoby w cały dziennik, a nie w to, co widać. #}
+                <input type="hidden" name="wszystkie" :value="calyFiltr ? '1' : '0'">
+                <input type="hidden" name="szukaj" value="{{ filters.szukaj }}">
+                <input type="hidden" name="od" value="{{ filters.od }}">
+                <input type="hidden" name="do" value="{{ filters.do }}">
+
+                <button type="submit" class="qc-btn qc-btn-outline qc-btn-sm">
+                    {{ icons.icon('trash', 14) }} {{ 'Delete selected'|trans }}
+                </button>
+            </div>
+
+            <table class="qc-table">
+                <thead>
+                    <tr>
+                        <th style="width:34px">
+                            <input type="checkbox" class="qc-checkbox"
+                                   aria-label="{{ 'Select all rows on this page'|trans }}"
+                                   :checked="calaStrona"
+                                   @change="przelaczStrone($event.target.checked)">
+                        </th>
+                        {{ kolumna.naglowek('product', 'Product'|trans, sort, dir, filters) }}
+                        <th>{{ 'Variant'|trans }}</th>
+                        {{ kolumna.naglowek('price_tax_incl', 'Gross'|trans, sort, dir, filters) }}
+                        {{ kolumna.naglowek('price_tax_excl', 'Net'|trans, sort, dir, filters) }}
+                        <th>{{ 'Currency'|trans }}</th>
+                        {{ kolumna.naglowek('captured_at', 'Recorded'|trans, sort, dir, filters) }}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="qc-checkbox js-omnibus-wiersz"
+                                       name="ids[]" value="{{ row.id_history }}"
+                                       x-model="zaznaczone" @change="calyFiltr = false">
+                            </td>
+                            <td>
+                                {{ row.product_name ?: ('Product %id% (deleted)'|trans({'%id%': row.id_product})) }}
+                                <span class="qc-card-desc">#{{ row.id_product }}</span>
+                            </td>
+                            <td>{{ row.id_product_attribute > 0 ? '#' ~ row.id_product_attribute : '—' }}</td>
+                            <td class="qc-num">{{ row.price_tax_incl|number_format(2, ',', ' ') }}</td>
+                            <td class="qc-num">{{ row.price_tax_excl|number_format(2, ',', ' ') }}</td>
+                            <td>{{ row.currency ?: row.id_currency }}</td>
+                            <td>{{ row.captured_at|date('Y-m-d H:i') }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7">
+                                <div class="qc-empty">
+                                    <span class="qc-empty-icon">{{ icons.icon('box', 36) }}</span>
+                                    <div class="qc-empty-text">
+                                        {% if filters.szukaj or filters.od or filters.do %}
+                                            {{ 'Nothing matches this filter.'|trans }}
+                                        {% else %}
+                                            {{ 'Nothing recorded yet. Use "Record all prices now" above to start the history today.'|trans }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if pages > 1 %}
+                <div class="qc-table-foot">
+                    <span>{{ 'Page %page% of %pages%, %total% entries'|trans({'%page%': page, '%pages%': pages, '%total%': total}) }}</span>
+                    <div class="qc-pagination">
+                        {% if page > 1 %}
+                            <a class="qc-page-btn" href="{{ path('quince_omnibus_log', filters|merge({'strona': page - 1, 'sortuj': sort, 'kierunek': dir})) }}">‹</a>
+                        {% endif %}
+
+                        {# Okno pięciu stron wokół bieżącej: przy dzienniku liczonym
+                           w tysiącach stron pełna lista nie mieści się w pasku. #}
+                        {% for numer in max(1, page - 2)..min(pages, page + 2) %}
+                            <a class="qc-page-btn{{ numer == page ? ' qc-active' : '' }}"
+                               href="{{ path('quince_omnibus_log', filters|merge({'strona': numer, 'sortuj': sort, 'kierunek': dir})) }}">{{ numer }}</a>
+                        {% endfor %}
+
+                        {% if page < pages %}
+                            <a class="qc-page-btn" href="{{ path('quince_omnibus_log', filters|merge({'strona': page + 1, 'sortuj': sort, 'kierunek': dir})) }}">›</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="qc-table-foot">
+                    <span>{{ '%total% entries'|trans({'%total%': total}) }}</span>
+                </div>
+            {% endif %}
+
+        </div>
+    </form>
+
+</div>
+{% endblock %}
