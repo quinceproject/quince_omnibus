@@ -1,14 +1,14 @@
 {**
- * Nota o najniższej cenie z ostatnich dni — strona produktu.
+ * Nota o najniższej cenie z ostatnich dni na stronie produktu.
  *
  * Domyślnie jeden wiersz drobnego tekstu pod blokiem ceny, tak jak w makiecie
  * (`.q-buy__omnibus`). Ikona, podpowiedź, procent i wykres dochodzą wyłącznie
- * wtedy, gdy sklep je włączy — po instalacji wszystkie trzy są wyłączone.
+ * wtedy, gdy sklep je włączy. Po instalacji wszystkie są wyłączone.
  *
  * Styl jest w motywie (components/product.css), nie tutaj: moduł dostarcza
  * treść, wygląd należy do silnika.
  *
- * `IconLibrary::svg()` oddaje SAME ścieżki, bez elementu `<svg>` — opakowanie
+ * `IconLibrary::svg()` oddaje SAME ścieżki, bez elementu `<svg>`. Opakowanie
  * dokłada szablon, tak jak w pasie informacyjnym i w stopce. Dzięki temu
  * rozmiar i barwa ikony należą do miejsca, w którym stoi, a nie do biblioteki.
  *}

@@ -1,12 +1,10 @@
 # Ekrany modułu w panelu silnika.
 #
 # _legacy_controller wskazuje zakładkę silnika, bo moduł bez niego i tak nie działa
-# (zadeklarowana zależność). Dzięki temu nie zakładamy własnej zakładki tylko po to,
-# żeby PrestaShop miał gdzie sprawdzić uprawnienia.
+# (zadeklarowana zależność). Uprawnienia PrestaShop sprawdza więc na zakładce silnika.
 #
-# Dwa widoki to dwie trasy, a nie jeden ekran z przełącznikiem: dziennik ma
-# stronicowanie i filtry, które muszą mieścić się w adresie — inaczej nie da się
-# wrócić do tej samej strony wyników ani wysłać jej komuś.
+# Dziennik ma osobną trasę, bo jego stronicowanie i filtry muszą mieścić się
+# w adresie. Inaczej nie da się wrócić do tej samej strony wyników ani wysłać jej komuś.
 
 quince_omnibus_settings:
   path: quince/omnibus

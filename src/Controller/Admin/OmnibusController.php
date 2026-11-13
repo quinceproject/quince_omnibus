@@ -16,10 +16,8 @@ use Quince\Engine\Controller\Admin\QuinceController;
 /**
  * Wspólna podstawa ekranów modułu.
  *
- * Jest tu jedna rzecz: spis zakładek. Moduł ma dwa widoki, więc gdyby każdy
- * kontroler wypisywał listę u siebie, dołożenie trzeciego wymagałoby poprawki
- * w dwóch miejscach — i pierwszy pominięty dawałby ekran bez zakładki, do
- * którego nie da się wrócić.
+ * Trzyma spis zakładek w jednym miejscu: nowy widok dopisany tylko w jednym
+ * kontrolerze dawałby ekran bez zakładki, do którego nie da się wrócić.
  */
 abstract class OmnibusController extends QuinceController
 {
@@ -49,8 +47,8 @@ abstract class OmnibusController extends QuinceController
             'layoutTitleDomain' => self::DOMENA,
             'quinceTabs' => $this->tabs(),
             'quinceTabsDomain' => self::DOMENA,
-            // Sidebar podświetla pozycję modułu, która wskazuje na ustawienia —
-            // dziennik jest jego widokiem, a nie osobną pozycją w menu.
+            // Sidebar podświetla pozycję modułu, która wskazuje na ustawienia.
+            // Dziennik jest jego widokiem, a nie osobną pozycją w menu.
             'quinceRoute' => $route,
             'quinceNavRoute' => 'quince_omnibus_settings',
         ];

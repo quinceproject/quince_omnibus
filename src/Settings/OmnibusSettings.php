@@ -24,13 +24,13 @@ use Validate;
  * kiedy pokazać notę) i jak prowadzimy dziennik (kiedy zapisujemy, jak długo
  * trzymamy, czego nie śledzimy).
  *
- * Wyglądu tu nie ma — notę rysuje motyw na swoich tokenach.
+ * Wyglądu tu nie ma: notę rysuje motyw na swoich tokenach.
  */
 final class OmnibusSettings
 {
     private const PREFIX = 'QUINCE_OMNIBUS_';
 
-    /** Klucze wielojęzyczne — wartość trzymana jako JSON `{"1":"…","2":"…"}`. */
+    /** Klucze wielojęzyczne: wartość trzymana jako JSON `{"1":"…","2":"…"}`. */
     private const TRANSLATABLE = ['LABEL_PRODUCT', 'LABEL_LISTING', 'TOOLTIP'];
 
     /** Zapis przy każdej zmianie ceny w sklepie. */
@@ -55,7 +55,7 @@ final class OmnibusSettings
     private const SCHEMA = [
         // --- co liczymy ---
         // Trzydzieści dni to minimum z dyrektywy. Pole zostaje otwarte, bo sklep
-        // ma prawo pokazywać dłuższy okres — krótszego nie wolno.
+        // ma prawo pokazywać dłuższy okres. Krótszego nie wolno.
         'DAYS' => '30',
         'PRICE_TYPE' => 'gross',
         'DISPLAY_MODE' => self::DISPLAY_ON_DISCOUNT,
@@ -64,8 +64,7 @@ final class OmnibusSettings
 
         // --- co jeszcze pokazać przy nocie ---
         // Wszystkie trzy domyślnie wyłączone: projekt karty produktu przewiduje
-        // sam wiersz tekstu. Sklep, który chce więcej, włącza to świadomie —
-        // odwrotna kolejność zmieniałaby wygląd każdemu, kto zainstaluje moduł.
+        // sam wiersz tekstu, więc instalacja modułu nie zmienia wyglądu karty.
         'SHOW_PERCENT' => '0',
         'PRECISION' => '0',
         'SHOW_ICON' => '0',
@@ -85,11 +84,11 @@ final class OmnibusSettings
         'LAST_CLEANUP' => '0',
     ];
 
-    /** Klucze, których formularz nie wysyła — zapisuje je sam moduł. */
+    /** Klucze, których formularz nie wysyła. Zapisuje je sam moduł. */
     private const INTERNAL = ['CRON_TOKEN', 'LAST_CLEANUP'];
 
     /**
-     * Klucze przychodzące jako tablica, nie jako pojedyncza wartość — mają
+     * Klucze przychodzące jako tablica, nie jako pojedyncza wartość. Mają
      * własną obsługę w save(). W pętli dla pól prostych rzutowanie tablicy na
      * tekst kończy się błędem, a nie zapisem.
      */
@@ -110,7 +109,7 @@ final class OmnibusSettings
 
         foreach (self::SCHEMA as $key => $default) {
             $value = Configuration::get(self::PREFIX . $key);
-            // Pusty ciąg jest wyborem sklepu, a nie brakiem wartości — dlatego
+            // Pusty ciąg jest wyborem sklepu, a nie brakiem wartości, dlatego
             // na wartość domyślną spadamy wyłącznie przy braku wpisu.
             $out[$key] = ($value === false || $value === null) ? $default : (string) $value;
         }
@@ -182,7 +181,7 @@ final class OmnibusSettings
     }
 
     /**
-     * Co otwiera wykres. Bez ikony zostaje sama nota — inaczej sklep włącza
+     * Co otwiera wykres. Bez ikony zostaje sama nota, inaczej sklep włącza
      * wykres, którego nie da się otworzyć.
      */
     public function chartTrigger(): string
@@ -248,7 +247,7 @@ final class OmnibusSettings
     }
 
     /**
-     * Wyłączone kategorie z nazwami — do wypisania w panelu.
+     * Wyłączone kategorie z nazwami, do wypisania w panelu.
      *
      * @return array<int,array{id:int,name:string}>
      */
@@ -320,8 +319,8 @@ final class OmnibusSettings
      * Wartości początkowe przy instalacji.
      *
      * Osobno od save(), bo instalacja idzie z konsoli albo z kontekstu jednego
-     * sklepu — a wtedy pozostałe sklepy zostałyby bez wartości. Dla tokena to
-     * nie jest drobiazg: odczyt w kontekście „wszystkie sklepy" nie trafiłby
+     * sklepu, a wtedy pozostałe sklepy zostałyby bez wartości. Dla tokena to
+     * groźne: odczyt w kontekście „wszystkie sklepy" nie trafiłby
      * w żaden wiersz, więc pierwsze wejście na ekran ustawień wygenerowałoby
      * nowy adres w miejsce tego, który sklep dostał przy instalacji.
      *
@@ -341,8 +340,8 @@ final class OmnibusSettings
     /**
      * Zapis do sklepów z kontekstu ORAZ do wiersza globalnego.
      *
-     * Wiersz globalny jest tym, co czyta odczyt bez wskazanego sklepu — panel
-     * otwarty na „wszystkich sklepach" i harmonogram wołany spoza sklepu.
+     * Wiersz globalny czyta odczyt bez wskazanego sklepu: panel otwarty
+     * na „wszystkich sklepach" i harmonogram wołany spoza sklepu.
      * Dostaje go też każdy sklep założony później.
      */
     private function wszedzie(string $key, string $value, bool $html = false): void
@@ -385,11 +384,10 @@ final class OmnibusSettings
 
         // Kategorie przychodzą jako lista zaznaczeń, a lecą do konfiguracji jako
         // JSON. Brak klucza w wysyłce znaczy „nic nie zaznaczono", więc pusta
-        // lista musi się zapisać — inaczej nie dałoby się cofnąć wykluczenia.
-        // Dwie nazwy znacznika wysyłki: `EXCLUDED_SUBMITTED` z dawnego ekranu
-        // i `EXCLUDED_CATEGORIES_SUBMITTED` z komponentu drzewa. Obie znaczą to
-        // samo — „formularz z tym polem naprawdę przyszedł" — a rozpoznanie obu
-        // pozwala nie ruszać zapisanych ustawień przy podmianie kontrolki.
+        // lista musi się zapisać, inaczej nie dałoby się cofnąć wykluczenia.
+        // Znacznik wysyłki ma dwie nazwy: `EXCLUDED_SUBMITTED` i
+        // `EXCLUDED_CATEGORIES_SUBMITTED` (komponent drzewa). Obie znaczą
+        // „formularz z tym polem naprawdę przyszedł".
         if (array_key_exists('EXCLUDED_CATEGORIES', $values)
             || array_key_exists('EXCLUDED_SUBMITTED', $values)
             || array_key_exists('EXCLUDED_CATEGORIES_SUBMITTED', $values)) {
@@ -479,7 +477,7 @@ final class OmnibusSettings
             return (string) $wartosci[$idLang];
         }
 
-        // Brak tłumaczenia dla języka nie może zostawić noty bez opisu — spadamy
+        // Brak tłumaczenia dla języka nie może zostawić noty bez opisu. Spadamy
         // na pierwszą niepustą wartość, żeby przy cenie stało cokolwiek.
         foreach ($wartosci as $wartosc) {
             if (trim((string) $wartosc) !== '') {

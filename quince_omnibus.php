@@ -20,16 +20,15 @@ use Quince\Omnibus\Model\PriceHistory;
 use Quince\Omnibus\Settings\OmnibusSettings;
 
 /**
- * Quince Omnibus — historia cen i najniższa cena z ostatnich dni.
+ * Quince Omnibus: historia cen i najniższa cena z ostatnich dni.
  *
  * Dyrektywa Omnibus wymaga, żeby przy każdym ogłoszeniu obniżki stała informacja
  * o najniższej cenie z okresu przed obniżką. Moduł zapisuje każdą zmianę ceny do
- * własnej tabeli i wylicza z niej tę kwotę — bez arkuszy i bez pracy ręcznej.
+ * własnej tabeli i wylicza z niej tę kwotę.
  *
- * Moduł zgłasza się silnikowi hookiem `actionQuinceRegisterFeature`. Dzięki temu
- * włącznik noty przy cenie na stronie produktu ożywa dopiero wtedy, gdy jest co
- * pokazać: bez zainstalowanego modułu pole stoi w panelu martwe, zamiast obiecywać
- * kwotę, której nikt nie policzy.
+ * Moduł zgłasza się silnikowi hookiem `actionQuinceRegisterFeature`. Dopiero wtedy
+ * włącznik noty przy cenie w panelu silnika jest aktywny; bez zainstalowanego
+ * modułu pole jest wyłączone.
  */
 class Quince_Omnibus extends Module
 {
@@ -44,7 +43,6 @@ class Quince_Omnibus extends Module
 
         // Silnik nie jest opcjonalny: to jego panel udostępnia ustawienia, jego
         // mapa strony produktu decyduje o miejscu noty, a jego motyw ją rysuje.
-        // Sklep bez silnika ma do tego samego zadania osobny moduł — ClearDeal.
         $this->dependencies = ['quince_engine'];
 
         // Jeden wpis w gałęzi „Quince project" w menu PrestaShopa, prowadzący
@@ -103,14 +101,14 @@ class Quince_Omnibus extends Module
         return [
             'actionQuinceRegisterFeature',
 
-            // Zapis historii — każde miejsce, w którym cena produktu może się zmienić.
+            // Zapis historii: każde miejsce, w którym cena produktu może się zmienić.
             'actionProductAdd',
             'actionProductUpdate',
             'actionObjectSpecificPriceAddAfter',
             'actionObjectSpecificPriceUpdateAfter',
             'actionObjectSpecificPriceDeleteAfter',
 
-            // Nota przy cenie — własne miejsce, ogłoszone niżej.
+            // Nota przy cenie: własne miejsce, ogłoszone niżej.
             self::HOOK_NOTE,
 
             // Skrypt wykresu, jeśli sklep go włączył.
@@ -122,10 +120,9 @@ class Quince_Omnibus extends Module
      * Miejsce na notę o najniższej cenie.
      *
      * Własny hook, a nie natywny `displayProductPriceBlock` z typem `after_price`.
-     * Tamten wypada W ŚRODKU wiersza z informacją podatkową — w elemencie
-     * liniowym, do którego wstawiamy akapit. Nota ma stać w osobnym wierszu pod
-     * blokiem ceny, tak jak w makiecie, a o tym decyduje szablon motywu, nie
-     * przypadkowe miejsce w cudzym znaczniku.
+     * Tamten wypada W ŚRODKU wiersza z informacją podatkową, czyli w elemencie
+     * liniowym, do którego trafiałby akapit. Nota ma stać w osobnym wierszu pod
+     * blokiem ceny, a jej miejsce wyznacza szablon motywu.
      */
     public const HOOK_NOTE = 'displayQuinceOmnibus';
 
@@ -336,12 +333,11 @@ class Quince_Omnibus extends Module
     }
 
     /**
-     * Skrypt wykresu — wyłącznie na stronie produktu i wyłącznie gdy wykres
+     * Skrypt wykresu: wyłącznie na stronie produktu i wyłącznie gdy wykres
      * jest włączony.
      *
-     * Sama biblioteka wykresów NIE ładuje się tutaj: dociąga ją skrypt przy
-     * pierwszym otwarciu okna. To 200 kB, których nie potrzebuje nikt, kto
-     * w notę nie kliknie — a klika ułamek odwiedzających.
+     * Sama biblioteka wykresów (200 kB) NIE ładuje się tutaj: dociąga ją skrypt
+     * przy pierwszym otwarciu okna.
      */
     public function hookDisplayHeader(): void
     {
@@ -361,7 +357,7 @@ class Quince_Omnibus extends Module
 
         Media::addJsDef(['quinceOmnibus' => [
             'adres' => $this->context->link->getModuleLink($this->name, 'history', [], true),
-            // Biblioteka leży u nas, nie w sieci dostawczej — sklep nie pobiera
+            // Biblioteka leży w module, nie w sieci dostawczej: sklep nie pobiera
             // niczego z zewnątrz.
             'biblioteka' => $this->_path . 'views/js/vendor/chart.umd.min.js',
             'tytul' => $this->trans('Price history', [], 'Modules.Quinceomnibus.Shop'),
@@ -377,9 +373,9 @@ class Quince_Omnibus extends Module
     /**
      * Nota o najniższej cenie pod blokiem ceny na stronie produktu.
      *
-     * Miejsce bierze się z szablonu motywu (`after_price`), a nie z własnego
-     * haka: mapa strony produktu ustawia kolejność elementów, a nota jest
-     * częścią elementu ceny, nie osobnym elementem do przestawiania.
+     * Hook wywołuje szablon motywu wewnątrz elementu ceny: nota jest częścią
+     * tego elementu, nie osobną pozycją w mapie strony produktu. Parametr
+     * `miejsce` = „karta" oznacza kartę w listingu.
      *
      * @param array<string,mixed> $params
      */
@@ -393,7 +389,7 @@ class Quince_Omnibus extends Module
 
         $this->smarty->assign($dane);
 
-        // Na karcie w listingu akapit rezerwuje motyw — także dla produktu bez
+        // Na karcie w listingu akapit rezerwuje motyw, także dla produktu bez
         // noty, żeby wszystkie karty w rzędzie miały ceny i przyciski w jednej
         // linii. Moduł wkłada tam sam tekst.
         $naKarcie = ($params['miejsce'] ?? '') === 'karta';
@@ -461,7 +457,7 @@ class Quince_Omnibus extends Module
             $idGroup
         );
 
-        // Brak historii to nie jest „najniższa cena równa bieżącej" — to brak
+        // Brak historii to nie jest „najniższa cena równa bieżącej", tylko brak
         // odpowiedzi. Nota z ceną bieżącą w roli najniższej byłaby nieprawdą,
         // więc wtedy nie ma jej wcale.
         if ($najnizsza === null) {
@@ -477,7 +473,7 @@ class Quince_Omnibus extends Module
         $waluta = (string) $this->context->currency->iso_code;
 
         // O ile cena bieżąca odbiega od najniższej zapisanej. Liczone wobec
-        // najniższej z dziennika, a nie wobec ceny przekreślonej — to dwie różne
+        // najniższej z dziennika, a nie wobec ceny przekreślonej. To dwie różne
         // liczby i sklep pokazuje obie.
         $procent = null;
 
@@ -495,8 +491,7 @@ class Quince_Omnibus extends Module
         $idLang = (int) $this->context->language->id;
 
         // Karta w listingu jest wezsza od strony produktu, wiec ma wlasne zdanie.
-        // Gdy sklep go nie wpisal, wraca do zdania ze strony produktu — lepiej
-        // dluzsze niz zadne.
+        // Gdy sklep go nie wpisal, wraca do zdania ze strony produktu.
         $etykieta = $naKarcie
             ? $settings->label($idLang, '', 'LABEL_LISTING')
             : '';
@@ -518,7 +513,7 @@ class Quince_Omnibus extends Module
             'quinceOmnibusIconStart' => $settings->iconAtStart(),
             'quinceOmnibusTooltip' => $settings->tooltip($idLang),
             // Wykres tylko na stronie produktu: na karcie w listingu nie ma czego
-            // otworzyc — miniatura nie zna wariantu, ktory klient oglada.
+            // otworzyc, bo miniatura nie zna wariantu, ktory klient oglada.
             'quinceOmnibusChart' => !$naKarcie && $settings->showsChart(),
             'quinceOmnibusChartOnIcon' => $settings->chartTrigger() === OmnibusSettings::CHART_ICON,
             'quinceOmnibusProduct' => $idProduct,

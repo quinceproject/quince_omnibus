@@ -1,9 +1,9 @@
 /* ===================================================================
-   Quince Omnibus — wykres historii ceny
+   Quince Omnibus: wykres historii ceny
 
    Otwiera się z noty pod ceną i pokazuje przebieg, z którego wzięła się
-   liczba w tej nocie. Ładuje się tylko wtedy, gdy sklep włączył wykres —
-   strona bez niego nie pobiera ani tego pliku, ani biblioteki wykresów.
+   liczba w tej nocie. Ładuje się tylko wtedy, gdy sklep włączył wykres.
+   Strona bez niego nie pobiera ani tego pliku, ani biblioteki wykresów.
 
    Okno rysujemy tu, a nie w szablonie: bez kliknięcia nie jest do niczego
    potrzebne, a strona ma być kompletna bez ani jednej linijki skryptu.
@@ -147,7 +147,7 @@
     }
 
     function podepnij(nota) {
-        // Wyzwalaczem jest ikona albo cała nota — zależnie od ustawienia sklepu.
+        // Wyzwalaczem jest ikona albo cała nota, zależnie od ustawienia sklepu.
         // Szablon oznacza właściwy element, skrypt nie zgaduje.
         var przycisk = nota.querySelector('[data-q-omnibus-otworz]') || nota;
 
@@ -166,7 +166,7 @@
     if (window.Quince && typeof window.Quince.register === 'function') {
         window.Quince.register('[data-q-omnibus-wykres]', podepnij);
     } else {
-        // Motyw bez rejestru wysp — podpinamy się sami po wczytaniu strony.
+        // Motyw bez rejestru wysp: podpinamy się sami po wczytaniu strony.
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('[data-q-omnibus-wykres]').forEach(podepnij);
         });

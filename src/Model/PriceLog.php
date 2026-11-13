@@ -20,7 +20,7 @@ use Shop;
  * Dziennik cen widziany z panelu.
  *
  * Osobno od `PriceHistory`, bo to inne zadanie: tamta klasa zapisuje i liczy
- * najniższą cenę dla sklepu, ta wypisuje wiersze człowiekowi — z filtrami,
+ * najniższą cenę dla sklepu, ta wypisuje wiersze człowiekowi z filtrami,
  * stronicowaniem i sortowaniem, których sklep nigdy nie potrzebuje.
  */
 final class PriceLog
@@ -77,7 +77,7 @@ final class PriceLog
 
     /**
      * Liczby na wierzchu ekranu: ile wpisów, ilu produktów dotyczą i od kiedy
-     * dziennik sięga. Bez cache'a — jedno zapytanie zbiorcze na wejście na ekran
+     * dziennik sięga. Bez cache'a: jedno zapytanie zbiorcze na wejście na ekran
      * jest tańsze niż wpis w konfiguracji, który przy czterech sklepach i tak
      * musiałby mieć osobny klucz na sklep.
      *
@@ -152,8 +152,8 @@ final class PriceLog
     /**
      * Wczytanie dziennika z pliku CSV.
      *
-     * Służy do przeniesienia historii ze sklepu, który prowadził ją wcześniej —
-     * bez tego sklep po wdrożeniu ma pustą historię i przez trzydzieści dni nie
+     * Służy do przeniesienia historii ze sklepu, który prowadził ją wcześniej.
+     * Bez tego sklep po wdrożeniu ma pustą historię i przez trzydzieści dni nie
      * może pokazać noty.
      *
      * @return array{wczytane:int,pominiete:int}
@@ -204,7 +204,7 @@ final class PriceLog
     }
 
     /**
-     * Kasuje wszystko, co pasuje do filtra — także to, czego nie widać na
+     * Kasuje wszystko, co pasuje do filtra, także to, czego nie widać na
      * bieżącej stronie.
      *
      * Osobno od kasowania po numerach wierszy, bo zaznaczenie „wszystkie
@@ -228,8 +228,8 @@ final class PriceLog
     }
 
     /**
-     * Warunek WHERE wspólny dla wypisania, liczenia i eksportu — jedna definicja
-     * filtra zamiast trzech, które z czasem przestają się zgadzać.
+     * Warunek WHERE wspólny dla wypisania, liczenia i eksportu. Jedna definicja
+     * filtra, żeby trzy miejsca nie rozjechały się z czasem.
      *
      * @param array{szukaj?:string,od?:string,do?:string} $filtry
      */

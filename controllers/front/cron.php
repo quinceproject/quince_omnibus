@@ -17,12 +17,12 @@ use Quince\Omnibus\Settings\OmnibusSettings;
  *
  * Sklep, który wybrał tryb nocny, nie zapisuje historii przy każdej zmianie ceny.
  * Import cenników potrafi zapisać kilka tysięcy produktów w kilka minut, a każdy
- * z nich pociągnąłby wtedy zapis do dziennika — razem z przeliczeniem ceny dla
+ * z nich pociągnąłby wtedy zapis do dziennika razem z przeliczeniem ceny dla
  * każdego wariantu. Ten adres robi to raz, poza godzinami pracy sklepu.
  *
- * Adres jest chroniony losowym tokenem. Token stoi w konfiguracji, a nie jest
- * liczony z nazwy sklepu — nazwa sklepu jest jawna, więc token z niej wyliczony
- * zna każdy, kto wejdzie na stronę główną.
+ * Adres jest chroniony losowym tokenem z konfiguracji. Nie wolno go liczyć
+ * z nazwy sklepu: nazwa jest jawna, więc token z niej wyliczony zna każdy,
+ * kto wejdzie na stronę główną.
  */
 class Quince_OmnibusCronModuleFrontController extends ModuleFrontController
 {

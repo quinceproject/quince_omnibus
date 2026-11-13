@@ -23,11 +23,11 @@ use Shop;
  *
  * Jeden wiersz to jedna cena zapisana w jednym momencie, w jednym sklepie,
  * walucie, kraju i grupie klientów. Wymiary są w tabeli dlatego, że ta sama
- * cena katalogowa daje różne kwoty przy różnym podatku i różnej zniżce grupy —
+ * cena katalogowa daje różne kwoty przy różnym podatku i różnej zniżce grupy,
  * a nota o najniższej cenie ma mówić o tej kwocie, którą klient widział.
  *
- * Zapisujemy tylko zmiany. Wiersz co godzinę dla niezmienionej ceny nie wnosi
- * nic poza rozmiarem tabeli, a najniższa cena z okresu wychodzi tak samo.
+ * Zapisujemy tylko zmiany: najniższa cena z okresu wychodzi tak samo, a tabela
+ * nie rośnie o wiersze z niezmienioną ceną.
  */
 class PriceHistory extends ObjectModel
 {
@@ -76,7 +76,7 @@ class PriceHistory extends ObjectModel
     ];
 
     /**
-     * Ta sama cena zapisana ponownie nie jest zmianą — chyba że wpis jest już
+     * Ta sama cena zapisana ponownie nie jest zmianą, chyba że wpis jest już
      * starszy niż okres, z którego liczymy najniższą cenę. Wtedy wiersz musi
      * powstać, bo inaczej po przekroczeniu okresu produkt bez zmian ceny
      * zostałby bez historii i nota zniknęłaby ze strony.
@@ -90,7 +90,7 @@ class PriceHistory extends ObjectModel
      * Najniższa cena z okresu.
      *
      * Pyta o wymiary, w których zapisujemy: sklep i jego domyślna waluta.
-     * Waluta bieżąca odpada świadomie — historia jest prowadzona w walucie
+     * Waluta bieżąca odpada: historia jest prowadzona w walucie
      * sklepu, a przeliczenie na walutę oglądającego jest sprawą wyświetlenia.
      * Pytanie o walutę bieżącą nie trafiłoby w żaden wiersz i nota zniknęłaby
      * każdemu, kto przełączy walutę.
@@ -132,7 +132,7 @@ class PriceHistory extends ObjectModel
     }
 
     /**
-     * Przebieg ceny w okresie — dane do wykresu.
+     * Przebieg ceny w okresie: dane do wykresu.
      *
      * Te same wymiary co przy liczeniu najniższej ceny, bo wykres ma pokazywać
      * TĘ historię, z której wzięła się liczba w nocie. Inny dobór wymiarów dałby
@@ -182,8 +182,8 @@ class PriceHistory extends ObjectModel
      * Zapisuje bieżącą cenę produktu we wszystkich sklepach, do których należy.
      *
      * Sklep jest pętlą, a nie kontekstem. Zapis produktu w kontekście „wszystkie
-     * sklepy" ma kontekst jednego sklepu, więc pozostałe zostałyby bez wiersza —
-     * a nota czyta historię po numerze sklepu, czyli u nich by nie powstała.
+     * sklepy" ma kontekst jednego sklepu, więc pozostałe zostałyby bez wiersza.
+     * Nota czyta historię po numerze sklepu, czyli u nich by nie powstała.
      *
      * @return int liczba dopisanych wierszy
      */
@@ -213,10 +213,10 @@ class PriceHistory extends ObjectModel
      * Grupy klientów sklepu.
      *
      * Cenę zapisujemy dla każdej z nich, bo zniżka grupy i cena promocyjna
-     * przypisana grupie dają różne kwoty — a nota ma podawać tę, którą widział
+     * przypisana grupie dają różne kwoty, a nota ma podawać tę, którą widział
      * ten konkretny klient.
      *
-     * Zapis dla jednej grupy nie wystarczy i to nie jest teoria: gość na sklepie
+     * Zapis dla jednej grupy nie wystarczy: gość na sklepie
      * należy do grupy „Odwiedzający", a nie do grupy domyślnej dla nowych kont.
      * Dziennik prowadzony tylko dla tej drugiej nie ma ani jednego wiersza dla
      * kogoś niezalogowanego, więc nota nie pokazuje się większości kupujących.
@@ -242,7 +242,7 @@ class PriceHistory extends ObjectModel
      *
      * Cenę liczymy przez `priceCalculation`, a nie `getPriceStatic`, bo tamta
      * bierze sklep, kraj, walutę i grupę z kontekstu żądania. Tutaj wszystkie
-     * cztery są dane z góry — zapisujemy cenę sklepu, a nie cenę tego, kto
+     * cztery są dane z góry: zapisujemy cenę sklepu, a nie cenę tego, kto
      * akurat zapisał produkt w panelu.
      */
     private static function recordOne(int $idProduct, int $idAttribute, int $idShop, int $idGroup): bool
@@ -297,15 +297,15 @@ class PriceHistory extends ObjectModel
             $idProduct,
             $idAttribute,
             $idCountry,
-            0,          // województwo — dziennik jest na poziomie kraju
-            '',         // kod pocztowy — jw.
+            0,          // województwo: dziennik jest na poziomie kraju
+            '',         // kod pocztowy: jw.
             $idCurrency,
             $idGroup,
             1,          // ilość
             $zPodatkiem,
             6,          // miejsca po przecinku
             false,      // nie samą kwotę obniżki
-            true,       // z obniżkami — zapisujemy cenę, którą klient widzi
+            true,       // z obniżkami: zapisujemy cenę, którą klient widzi
             true,       // z opłatą środowiskową
             $cenaSzczegolna,
             true,       // ze zniżką grupy
@@ -369,14 +369,14 @@ class PriceHistory extends ObjectModel
             is_array($wiersze) ? $wiersze : []
         );
 
-        // Produkt bez wiersza w product_shop nie istnieje w żadnym sklepie —
-        // zapisujemy go w bieżącym, żeby świeżo zakładany produkt miał historię
+        // Produkt bez wiersza w product_shop nie istnieje w żadnym sklepie.
+        // Zapisujemy go w bieżącym, żeby świeżo zakładany produkt miał historię
         // od pierwszej ceny, a nie dopiero od przypisania do sklepu.
         return $sklepy !== [] ? $sklepy : [(int) Shop::getContextShopID() ?: 1];
     }
 
     /**
-     * Produkt i jego warianty. Zero na początku to sam produkt — wariant bez
+     * Produkt i jego warianty. Zero na początku to sam produkt: wariant bez
      * własnej historii sięga po nią przy liczeniu najniższej ceny.
      *
      * @return int[]
@@ -399,7 +399,7 @@ class PriceHistory extends ObjectModel
         return array_merge([0], $warianty);
     }
 
-    /** Domyślna waluta sklepu — w niej prowadzimy dziennik. */
+    /** Domyślna waluta sklepu, w której prowadzimy dziennik. */
     public static function domyslnaWaluta(int $idShop): int
     {
         return (int) Configuration::get('PS_CURRENCY_DEFAULT', null, null, $idShop);

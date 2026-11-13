@@ -19,11 +19,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Dziennik cen — co i kiedy zostało zapisane.
+ * Dziennik cen: co i kiedy zostało zapisane.
  *
- * Ekran istnieje po to, żeby dało się sprawdzić, skąd wzięła się kwota w nocie.
- * Bez niego najniższa cena jest liczbą bez uzasadnienia, a przy sporze z klientem
- * albo kontrolą sklep musi umieć pokazać zapis.
+ * Pozwala sprawdzić, skąd wzięła się kwota w nocie.
  */
 class LogController extends OmnibusController
 {
@@ -66,7 +64,7 @@ class LogController extends OmnibusController
      *
      * Dwa tryby, bo zaznaczenie „wszystkie pasujące do filtra" obejmuje także
      * strony, których nikt nie oglądał. Wtedy zbiór opisuje filtr, a nie lista
-     * numerów — tysiąc pól ukrytych w formularzu i tak nie przeszłoby przez
+     * numerów: tysiąc pól ukrytych w formularzu i tak nie przeszłoby przez
      * `max_input_vars`.
      */
     public function deleteAction(Request $request): RedirectResponse
@@ -127,7 +125,7 @@ class LogController extends OmnibusController
     /**
      * Zapis cen wszystkich produktów naraz.
      *
-     * Potrzebne raz — zaraz po instalacji. Bez tego dziennik zaczyna się od
+     * Potrzebne raz, zaraz po instalacji. Bez tego dziennik zaczyna się od
      * pierwszej zmiany ceny, więc produkty, których nikt nie edytuje, przez
      * miesiąc nie mają noty.
      */
@@ -199,8 +197,8 @@ class LogController extends OmnibusController
      */
     private function filtry(Request $request): array
     {
-        // Adres przy wypisaniu listy, pola formularza przy kasowaniu — ten sam
-        // filtr przychodzi raz jedną, raz drugą drogą.
+        // Ten sam filtr przychodzi w adresie (wypisanie listy) albo w polach
+        // formularza (kasowanie).
         $wez = static fn (string $klucz): string => trim(
             (string) ($request->query->get($klucz) ?? $request->request->get($klucz) ?? '')
         );

@@ -1,4 +1,4 @@
-{# Dziennik cen — co i kiedy zostało zapisane.
+{# Dziennik cen: co i kiedy zostało zapisane.
    Ten sam layout i te same komponenty co reszta panelu Quince. #}
 {% extends '@Modules/quince_engine/views/templates/admin/layout.html.twig' %}
 {% import '@Modules/quince_engine/views/templates/admin/_macros/icons.html.twig' as icons %}
@@ -9,7 +9,7 @@
     {# Makro nie dziedziczy importów szablonu, więc ikony bierze u siebie. #}
     {% import '@Modules/quince_engine/views/templates/admin/_macros/icons.html.twig' as icons %}
 
-    {# Kliknięcie w tę samą kolumnę odwraca porządek, w inną — zaczyna od malejącego:
+    {# Kliknięcie w tę samą kolumnę odwraca porządek, w inną zaczyna od malejącego:
        przy dacie i cenie ludzie szukają najpierw tego, co największe i najnowsze. #}
     {% set nowyKierunek = (sort == klucz and dir == 'DESC') ? 'ASC' : 'DESC' %}
     <th class="qc-sortable">
@@ -186,8 +186,7 @@
                 <span><span x-text="ile"></span> {{ 'selected'|trans }}</span>
 
                 {# Propozycja rozszerzenia zaznaczenia pojawia się dopiero wtedy, gdy
-                   cała strona jest zaznaczona, a poza nią coś jeszcze zostało —
-                   wcześniej nie ma czego rozszerzać. #}
+                   cała strona jest zaznaczona, a poza nią coś jeszcze zostało. #}
                 <template x-if="calaStrona && wszystkich > naStronie && !calyFiltr">
                     <button type="button" class="qc-btn qc-btn-text qc-btn-sm" @click="calyFiltr = true">
                         {{ 'Select all %total% matching the filter'|trans({'%total%': total}) }}

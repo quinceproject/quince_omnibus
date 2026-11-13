@@ -13,14 +13,13 @@ use Quince\Omnibus\Model\PriceHistory;
 use Quince\Omnibus\Settings\OmnibusSettings;
 
 /**
- * Przebieg ceny produktu — dane do wykresu.
+ * Przebieg ceny produktu: dane do wykresu.
  *
- * Wąski punkt wejścia, oddający tylko to, co rysuje wykres: pary data–cena
- * i najniższą wartość z okresu. Bez zdjęć, bez opisu, bez reszty strony.
+ * Oddaje tylko to, co rysuje wykres: pary data–cena i najniższą wartość
+ * z okresu.
  *
- * Odpowiedź jest zawsze poprawnym JSON-em, także dla produktu bez historii —
- * strona klienta ma jeden kształt do obsłużenia, a nie osobną ścieżkę na
- * każdy przypadek.
+ * Odpowiedź jest zawsze poprawnym JSON-em o tym samym kształcie, także dla
+ * produktu bez historii.
  */
 class Quince_OmnibusHistoryModuleFrontController extends ModuleFrontController
 {
@@ -33,8 +32,8 @@ class Quince_OmnibusHistoryModuleFrontController extends ModuleFrontController
         $idProduct = (int) Tools::getValue('id_product');
 
         // Wykres wyłączony w ustawieniach znaczy, że tych danych nie udostępniamy
-        // wcale — inaczej adres oddawałby historię cen sklepu, który świadomie
-        // postanowił jej nie pokazywać.
+        // wcale. Inaczej adres oddawałby historię cen sklepu, który postanowił
+        // jej nie pokazywać.
         if (!$settings->showsChart() || $idProduct <= 0 || $settings->isProductExcluded($idProduct)) {
             $this->odpowiedz(['punkty' => []]);
         }

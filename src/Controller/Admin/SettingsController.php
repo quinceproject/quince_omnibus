@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Ustawienia dziennika cen.
  *
  * Dziedziczy po klasie z silnika, więc strona dostaje ten sam sidebar, pasek
- * zapisu i wygląd co reszta panelu Quince — bez kopiowania czegokolwiek.
+ * zapisu i wygląd co reszta panelu Quince.
  */
 class SettingsController extends OmnibusController
 {
@@ -43,7 +43,7 @@ class SettingsController extends OmnibusController
                 'excluded' => $this->settings->excludedCategories(),
                 'categories' => $this->categories($idLang),
                 'cronUrl' => $this->cronUrl(),
-                // Wybierak ikon i jego lista są w silniku — moduł podaje tylko
+                // Wybierak ikon i jego lista są w silniku. Moduł podaje tylko
                 // bieżącą ikonę i adres wyszukiwania.
                 'iconSvg' => IconLibrary::svg($this->settings->all()['ICON']),
                 'iconsRoute' => 'quince_icons_search',
