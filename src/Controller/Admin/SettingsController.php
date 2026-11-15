@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Quince\Omnibus\Controller\Admin;
 
 use Db;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Quince\Engine\Ui\IconLibrary;
 use Quince\Omnibus\Settings\OmnibusSettings;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -30,6 +31,7 @@ class SettingsController extends OmnibusController
     {
     }
 
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to view this.')]
     public function indexAction(): Response
     {
         $idLang = (int) $this->getContext()->language->id;
@@ -57,6 +59,7 @@ class SettingsController extends OmnibusController
         );
     }
 
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to change this.')]
     public function saveAction(Request $request): RedirectResponse
     {
         if (!$this->isCsrfTokenValid('quince_omnibus_settings_save', $request->request->get('_csrf_token'))) {
@@ -78,6 +81,7 @@ class SettingsController extends OmnibusController
      * ręcznie, a jego wymiana musi unieważnić poprzedni adres od razu, nie
      * dopiero przy zapisie całego ekranu.
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to change this.')]
     public function tokenAction(Request $request): RedirectResponse
     {
         if (!$this->isCsrfTokenValid('quince_omnibus_token', $request->request->get('_csrf_token'))) {

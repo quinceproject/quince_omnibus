@@ -1,7 +1,8 @@
 # Ekrany modułu w panelu silnika.
 #
-# _legacy_controller wskazuje zakładkę silnika, bo moduł bez niego i tak nie działa
-# (zadeklarowana zależność). Uprawnienia PrestaShop sprawdza więc na zakładce silnika.
+# _legacy_controller wskazuje własną zakładkę modułu (`AdminQuinceOmnibus`). Do niej
+# odnoszą się uprawnienia pracownika: atrybuty `#[AdminSecurity]` w kontrolerach
+# sprawdzają prawa do tej zakładki.
 #
 # Dziennik ma osobną trasę, bo jego stronicowanie i filtry muszą mieścić się
 # w adresie. Inaczej nie da się wrócić do tej samej strony wyników ani wysłać jej komuś.
@@ -11,7 +12,7 @@ quince_omnibus_settings:
   methods: [GET]
   defaults:
     _controller: Quince\Omnibus\Controller\Admin\SettingsController::indexAction
-    _legacy_controller: 'AdminQuince'
+    _legacy_controller: 'AdminQuinceOmnibus'
     _legacy_link: 'AdminQuince'
 
 quince_omnibus_settings_save:
@@ -19,7 +20,7 @@ quince_omnibus_settings_save:
   methods: [POST]
   defaults:
     _controller: Quince\Omnibus\Controller\Admin\SettingsController::saveAction
-    _legacy_controller: 'AdminQuince'
+    _legacy_controller: 'AdminQuinceOmnibus'
     _legacy_link: 'AdminQuince:save'
 
 quince_omnibus_token:
@@ -27,7 +28,7 @@ quince_omnibus_token:
   methods: [POST]
   defaults:
     _controller: Quince\Omnibus\Controller\Admin\SettingsController::tokenAction
-    _legacy_controller: 'AdminQuince'
+    _legacy_controller: 'AdminQuinceOmnibus'
     _legacy_link: 'AdminQuince:save'
 
 quince_omnibus_log:
@@ -35,7 +36,7 @@ quince_omnibus_log:
   methods: [GET]
   defaults:
     _controller: Quince\Omnibus\Controller\Admin\LogController::indexAction
-    _legacy_controller: 'AdminQuince'
+    _legacy_controller: 'AdminQuinceOmnibus'
     _legacy_link: 'AdminQuince'
 
 quince_omnibus_log_delete:
@@ -43,7 +44,7 @@ quince_omnibus_log_delete:
   methods: [POST]
   defaults:
     _controller: Quince\Omnibus\Controller\Admin\LogController::deleteAction
-    _legacy_controller: 'AdminQuince'
+    _legacy_controller: 'AdminQuinceOmnibus'
     _legacy_link: 'AdminQuince:delete'
 
 quince_omnibus_log_clean:
@@ -51,7 +52,7 @@ quince_omnibus_log_clean:
   methods: [POST]
   defaults:
     _controller: Quince\Omnibus\Controller\Admin\LogController::cleanAction
-    _legacy_controller: 'AdminQuince'
+    _legacy_controller: 'AdminQuinceOmnibus'
     _legacy_link: 'AdminQuince:delete'
 
 quince_omnibus_log_record_all:
@@ -59,7 +60,7 @@ quince_omnibus_log_record_all:
   methods: [POST]
   defaults:
     _controller: Quince\Omnibus\Controller\Admin\LogController::recordAllAction
-    _legacy_controller: 'AdminQuince'
+    _legacy_controller: 'AdminQuinceOmnibus'
     _legacy_link: 'AdminQuince:save'
 
 quince_omnibus_log_export:
@@ -67,7 +68,7 @@ quince_omnibus_log_export:
   methods: [GET]
   defaults:
     _controller: Quince\Omnibus\Controller\Admin\LogController::exportAction
-    _legacy_controller: 'AdminQuince'
+    _legacy_controller: 'AdminQuinceOmnibus'
     _legacy_link: 'AdminQuince'
 
 quince_omnibus_log_import:
@@ -75,5 +76,5 @@ quince_omnibus_log_import:
   methods: [POST]
   defaults:
     _controller: Quince\Omnibus\Controller\Admin\LogController::importAction
-    _legacy_controller: 'AdminQuince'
+    _legacy_controller: 'AdminQuinceOmnibus'
     _legacy_link: 'AdminQuince:save'

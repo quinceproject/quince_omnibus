@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Quince\Omnibus\Controller\Admin;
 
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Quince\Omnibus\Model\PriceHistory;
 use Quince\Omnibus\Model\PriceLog;
 use Quince\Omnibus\Settings\OmnibusSettings;
@@ -31,6 +32,7 @@ class LogController extends OmnibusController
     ) {
     }
 
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to view this.')]
     public function indexAction(Request $request): Response
     {
         $filtry = $this->filtry($request);
@@ -67,6 +69,7 @@ class LogController extends OmnibusController
      * numerów: tysiąc pól ukrytych w formularzu i tak nie przeszłoby przez
      * `max_input_vars`.
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.')]
     public function deleteAction(Request $request): RedirectResponse
     {
         if (!$this->isCsrfTokenValid('quince_omnibus_log_delete', $request->request->get('_csrf_token'))) {
@@ -106,6 +109,7 @@ class LogController extends OmnibusController
     /**
      * Ręczne sprzątanie wpisów starszych niż okres przechowywania.
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.')]
     public function cleanAction(Request $request): RedirectResponse
     {
         if (!$this->isCsrfTokenValid('quince_omnibus_log_clean', $request->request->get('_csrf_token'))) {
@@ -129,6 +133,7 @@ class LogController extends OmnibusController
      * pierwszej zmiany ceny, więc produkty, których nikt nie edytuje, przez
      * miesiąc nie mają noty.
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to change this.')]
     public function recordAllAction(Request $request): RedirectResponse
     {
         if (!$this->isCsrfTokenValid('quince_omnibus_log_record_all', $request->request->get('_csrf_token'))) {
@@ -153,6 +158,7 @@ class LogController extends OmnibusController
         return $this->redirectToRoute('quince_omnibus_log');
     }
 
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'You do not have permission to view this.')]
     public function exportAction(Request $request): Response
     {
         $csv = $this->log->toCsv($this->filtry($request));
@@ -165,6 +171,7 @@ class LogController extends OmnibusController
         ]);
     }
 
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to change this.')]
     public function importAction(Request $request): RedirectResponse
     {
         if (!$this->isCsrfTokenValid('quince_omnibus_log_import', $request->request->get('_csrf_token'))) {
