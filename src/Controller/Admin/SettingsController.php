@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Quince\Omnibus\Controller\Admin;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use Db;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Quince\Engine\Ui\IconLibrary;
