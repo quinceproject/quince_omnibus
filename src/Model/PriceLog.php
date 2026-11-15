@@ -135,11 +135,11 @@ final class PriceLog
         ], ';');
 
         foreach (is_array($wiersze) ? $wiersze : [] as $w) {
-            fputcsv($plik, [
+            fputcsv($plik, array_map(static fn ($v): string => self::komorka($v), [
                 $w['id_history'], $w['id_product'], $w['product_name'], $w['id_product_attribute'],
                 $w['price_tax_incl'], $w['price_tax_excl'], $w['id_currency'], $w['id_country'],
                 $w['id_group'], $w['id_shop'], $w['captured_at'],
-            ], ';');
+            ]), ';');
         }
 
         rewind($plik);
@@ -147,6 +147,20 @@ final class PriceLog
         fclose($plik);
 
         return $csv;
+    }
+
+    /**
+     * Komórka bezpieczna dla arkusza. Nazwa produktu zaczynająca się od `=`,
+     * `+`, `-` albo `@` zostałaby w Excelu wykonana jako formuła, więc
+     * poprzedzamy ją apostrofem, który arkusz traktuje jako znak tekstu.
+     */
+    private static function komorka(mixed $wartosc): string
+    {
+        $tekst = (string) $wartosc;
+
+        return $tekst !== '' && in_array($tekst[0], ['=', '+', '-', '@', "\t", "\r"], true)
+            ? "'" . $tekst
+            : $tekst;
     }
 
     /**

@@ -9,6 +9,10 @@
 
 declare(strict_types=1);
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use Quince\Omnibus\Model\PriceHistory;
 use Quince\Omnibus\Settings\OmnibusSettings;
 

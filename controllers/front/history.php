@@ -9,6 +9,10 @@
 
 declare(strict_types=1);
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use Quince\Omnibus\Model\PriceHistory;
 use Quince\Omnibus\Settings\OmnibusSettings;
 
@@ -35,6 +39,19 @@ class Quince_OmnibusHistoryModuleFrontController extends ModuleFrontController
         // wcale. Inaczej adres oddawałby historię cen sklepu, który postanowił
         // jej nie pokazywać.
         if (!$settings->showsChart() || $idProduct <= 0 || $settings->isProductExcluded($idProduct)) {
+            $this->odpowiedz(['punkty' => []]);
+        }
+
+        // Produkt wyłączony albo ukryty w tym sklepie nie ma strony z wykresem,
+        // więc nie oddajemy też jego cen.
+        $widoczny = (bool) Db::getInstance()->getValue(
+            'SELECT 1 FROM `' . _DB_PREFIX_ . 'product_shop`
+              WHERE `id_product` = ' . $idProduct . '
+                AND `id_shop` = ' . (int) $this->context->shop->id . '
+                AND `active` = 1 AND `visibility` <> "none"'
+        );
+
+        if (!$widoczny) {
             $this->odpowiedz(['punkty' => []]);
         }
 
