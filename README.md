@@ -116,6 +116,9 @@ Open **Quince project → Price history** in the back office menu, or click
 - **Hooks** `actionProductAdd`, `actionProductUpdate` and the specific price hooks
   record changes as they happen; the `cron` front controller records them on a
   schedule and removes old entries.
+- **`actionQuincePriceDropped`** is called for other modules when a recorded price is
+  lower than the previous one (default customer group), with `id_product`,
+  `id_product_attribute`, `id_shop`, `id_currency`, `old_price` and `new_price`.
 - **`displayQuinceOmnibus`** draws the note where the Quince theme asks for it; the
   module announces itself to Quince Engine with `actionQuinceRegisterFeature`.
 - **`history` front controller** returns the price history for the chart.

@@ -4,6 +4,16 @@ All notable changes to this module are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the versioning follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2026-11-23
+
+### Added
+
+- Hook `actionQuincePriceDropped` for other modules: called when the module records a
+  price lower than the previous one, with the product, the variant, the shop and both
+  prices (for the default customer group). Quince Notifuse uses it to tell customers
+  that a product from their favourites or cart got cheaper. Recording prices works as
+  before.
+
 ## [0.1.5] - 2026-11-16
 
 ### Changed

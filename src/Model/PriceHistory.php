@@ -265,7 +265,9 @@ class PriceHistory extends ObjectModel
             return false;
         }
 
-        return (bool) Db::getInstance()->insert('quince_omnibus_price_history', [
+        $poprzednia = self::ostatniaCena($idProduct, $idAttribute, $idShop, $idCurrency, $idCountry, $idGroup);
+
+        $zapisane = (bool) Db::getInstance()->insert('quince_omnibus_price_history', [
             'id_product' => $idProduct,
             'id_product_attribute' => $idAttribute,
             'price_tax_incl' => $brutto,
@@ -276,6 +278,49 @@ class PriceHistory extends ObjectModel
             'id_group' => $idGroup,
             'captured_at' => date('Y-m-d H:i:s'),
         ]);
+
+        // Spadek ceny dla innych modułów (Quince Notifuse: klienci z produktem
+        // w ulubionych albo w koszyku). Tylko grupa domyślna dla klientów:
+        // jedna zmiana ceny nie może dawać zgłoszenia na każdą grupę.
+        if ($zapisane
+            && $poprzednia !== null
+            && $brutto < $poprzednia - self::EPSILON
+            && $idGroup === (int) Configuration::get('PS_CUSTOMER_GROUP', null, null, $idShop)
+        ) {
+            \Hook::exec('actionQuincePriceDropped', [
+                'id_product' => $idProduct,
+                'id_product_attribute' => $idAttribute,
+                'id_shop' => $idShop,
+                'id_currency' => $idCurrency,
+                'old_price' => $poprzednia,
+                'new_price' => $brutto,
+            ]);
+        }
+
+        return $zapisane;
+    }
+
+    /** Ostatnia zapisana cena brutto dla tych wymiarów albo null, gdy historii nie ma. */
+    private static function ostatniaCena(
+        int $idProduct,
+        int $idAttribute,
+        int $idShop,
+        int $idCurrency,
+        int $idCountry,
+        int $idGroup
+    ): ?float {
+        $wartosc = Db::getInstance()->getValue(
+            'SELECT price_tax_incl FROM ' . _DB_PREFIX_ . 'quince_omnibus_price_history
+             WHERE id_product = ' . $idProduct . '
+               AND id_product_attribute = ' . $idAttribute . '
+               AND id_shop = ' . $idShop . '
+               AND id_currency = ' . $idCurrency . '
+               AND id_country = ' . $idCountry . '
+               AND id_group = ' . $idGroup . '
+             ORDER BY captured_at DESC'
+        );
+
+        return $wartosc === false || $wartosc === null ? null : (float) $wartosc;
     }
 
     /**
